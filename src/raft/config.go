@@ -194,6 +194,7 @@ func (cfg *config) start1(i int) {
 			}
 
 			if err_msg != "" {
+				DPrintf("server %d:%v", i, cfg.logs[i])
 				log.Fatalf("apply error: %v\n", err_msg)
 				cfg.applyErr[i] = err_msg
 				// keep reading after error so that Raft doesn't block
@@ -297,7 +298,7 @@ func (cfg *config) setlongreordering(longrel bool) {
 	cfg.net.LongReordering(longrel)
 }
 
-// check that there's exactly one leader.
+// check that there's exactly one Leader.
 // try a few times in case re-elections are needed.
 func (cfg *config) checkOneLeader() int {
 	for iters := 0; iters < 10; iters++ {
@@ -307,6 +308,8 @@ func (cfg *config) checkOneLeader() int {
 		leaders := make(map[int][]int)
 		for i := 0; i < cfg.n; i++ {
 			if cfg.connected[i] {
+				//s:=cfg.rafts[i].getState1()
+				//fmt.Printf("[%d] state:%s\n",i,s)
 				if term, leader := cfg.rafts[i].GetState(); leader {
 					leaders[term] = append(leaders[term], i)
 				}
@@ -316,7 +319,7 @@ func (cfg *config) checkOneLeader() int {
 		lastTermWithLeader := -1
 		for term, leaders := range leaders {
 			if len(leaders) > 1 {
-				cfg.t.Fatalf("term %d has %d (>1) leaders", term, len(leaders))
+				cfg.t.Fatalf("currentTerm %d has %d (>1) leaders", term, len(leaders))
 			}
 			if term > lastTermWithLeader {
 				lastTermWithLeader = term
@@ -327,11 +330,11 @@ func (cfg *config) checkOneLeader() int {
 			return leaders[lastTermWithLeader][0]
 		}
 	}
-	cfg.t.Fatalf("expected one leader, got none")
+	cfg.t.Fatalf("expected one Leader, got none")
 	return -1
 }
 
-// check that everyone agrees on the term.
+// check that everyone agrees on the currentTerm.
 func (cfg *config) checkTerms() int {
 	term := -1
 	for i := 0; i < cfg.n; i++ {
@@ -340,20 +343,20 @@ func (cfg *config) checkTerms() int {
 			if term == -1 {
 				term = xterm
 			} else if term != xterm {
-				cfg.t.Fatalf("servers disagree on term")
+				cfg.t.Fatalf("servers disagree on currentTerm")
 			}
 		}
 	}
 	return term
 }
 
-// check that there's no leader
+// check that there's no Leader
 func (cfg *config) checkNoLeader() {
 	for i := 0; i < cfg.n; i++ {
 		if cfg.connected[i] {
 			_, is_leader := cfg.rafts[i].GetState()
 			if is_leader {
-				cfg.t.Fatalf("expected no leader, but %v claims to be leader", i)
+				cfg.t.Fatalf("expected no Leader, but %v claims to be Leader", i)
 			}
 		}
 	}
@@ -416,7 +419,7 @@ func (cfg *config) wait(index int, n int, startTerm int) interface{} {
 }
 
 // do a complete agreement.
-// it might choose the wrong leader initially,
+// it might choose the wrong Leader initially,
 // and have to re-submit after giving up.
 // entirely gives up after about 10 seconds.
 // indirectly checks that the servers agree on the
@@ -424,14 +427,14 @@ func (cfg *config) wait(index int, n int, startTerm int) interface{} {
 // as do the threads that read from applyCh.
 // returns index.
 // if retry==true, may submit the command multiple
-// times, in case a leader fails just after Start().
+// times, in case a Leader fails just after Start().
 // if retry==false, calls Start() only once, in order
 // to simplify the early Lab 2B tests.
 func (cfg *config) one(cmd interface{}, expectedServers int, retry bool) int {
 	t0 := time.Now()
 	starts := 0
 	for time.Since(t0).Seconds() < 10 {
-		// try all the servers, maybe one is the leader.
+		// try all the servers, maybe one is the Leader.
 		index := -1
 		for si := 0; si < cfg.n; si++ {
 			starts = (starts + 1) % cfg.n
@@ -451,7 +454,7 @@ func (cfg *config) one(cmd interface{}, expectedServers int, retry bool) int {
 		}
 
 		if index != -1 {
-			// somebody claimed to be the leader and to have
+			// somebody claimed to be the Leader and to have
 			// submitted our command; wait a while for agreement.
 			t1 := time.Now()
 			for time.Since(t1).Seconds() < 2 {
@@ -465,14 +468,15 @@ func (cfg *config) one(cmd interface{}, expectedServers int, retry bool) int {
 				}
 				time.Sleep(20 * time.Millisecond)
 			}
+
 			if retry == false {
-				cfg.t.Fatalf("one(%v) failed to reach agreement", cmd)
+				cfg.t.Fatalf("one(%v) failed to reach agreement (1)", cmd)
 			}
 		} else {
 			time.Sleep(50 * time.Millisecond)
 		}
 	}
-	cfg.t.Fatalf("one(%v) failed to reach agreement", cmd)
+	cfg.t.Fatalf("one(%v) failed to reach agreement (2)", cmd)
 	return -1
 }
 

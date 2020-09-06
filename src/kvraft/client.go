@@ -4,9 +4,9 @@ import "../labrpc"
 import "crypto/rand"
 import "math/big"
 
-
 type Clerk struct {
-	servers []*labrpc.ClientEnd
+	servers       []*labrpc.ClientEnd
+	currentLeader int
 	// You will have to modify this struct.
 }
 
@@ -52,13 +52,37 @@ func (ck *Clerk) Get(key string) string {
 // must match the declared types of the RPC handler function's
 // arguments. and reply must be passed as a pointer.
 //
-func (ck *Clerk) PutAppend(key string, value string, op string) {
+func (ck *Clerk) PutAppend(key string, value string, op int) {
 	// You will have to modify this function.
+	args := PutAppendArgs{
+		Key:   key,
+		Value: value,
+		Op:    op,
+	}
+	reply := PutAppendReply{
+		Err:      "",
+		LeaderId: 0,
+	}
+	for {
+		ck.servers[ck.currentLeader].Call("KVServer.PutAppend", args, reply)
+		if reply.Err == ErrWrongLeader {
+			for i := 0; i < len(ck.servers); i++ {
+				ck.servers[i].Call("KVServer.PutAppend", args, reply)
+				if reply.Err != ErrWrongLeader {
+					ck.currentLeader = i
+				}
+				if reply.Err == OK {
+					return
+				}
+			}
+		}
+	}
+
 }
 
 func (ck *Clerk) Put(key string, value string) {
-	ck.PutAppend(key, value, "Put")
+	ck.PutAppend(key, value, PUT)
 }
 func (ck *Clerk) Append(key string, value string) {
-	ck.PutAppend(key, value, "Append")
+	ck.PutAppend(key, value, APPEND)
 }

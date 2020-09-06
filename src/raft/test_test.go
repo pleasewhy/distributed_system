@@ -613,7 +613,14 @@ func TestPersist22C(t *testing.T) {
 		cfg.disconnect((leader1 + 1) % servers)
 		cfg.disconnect((leader1 + 2) % servers)
 
+		//fmt.Print("connect: ")
+		//for i := 0; i < servers; i++ {
+		//	if cfg.connected[i] && cfg.rafts[i] != nil {
+		//		fmt.Print(i, " ")
+		//	}
+		//}
 		cfg.one(10+index, servers-2, true)
+		//fmt.Printf("index:%d completed", 10+index)
 		index++
 
 		cfg.disconnect((leader1 + 0) % servers)
@@ -629,7 +636,13 @@ func TestPersist22C(t *testing.T) {
 
 		cfg.start1((leader1 + 3) % servers)
 		cfg.connect((leader1 + 3) % servers)
-
+		//fmt.Printf("%d id: %v restart and connect\n", (leader1+3)%servers, cfg.rafts[(leader1+3)%servers].identifier)
+		//fmt.Print("connect: ")
+		//for i := 0; i < servers; i++ {
+		//	if cfg.connected[i] {
+		//		fmt.Print(i, " ")
+		//	}
+		//}
 		cfg.one(10+index, servers-2, true)
 		index++
 
@@ -783,6 +796,9 @@ func TestFigure8Unreliable2C(t *testing.T) {
 		}
 		leader := -1
 		for i := 0; i < servers; i++ {
+			if !cfg.connected[i] {
+				continue
+			}
 			_, _, ok := cfg.rafts[i].Start(rand.Int() % 10000)
 			if ok && cfg.connected[i] {
 				leader = i
@@ -817,6 +833,7 @@ func TestFigure8Unreliable2C(t *testing.T) {
 		}
 	}
 
+	//Debug = 1
 	cfg.one(rand.Int()%10000, servers, true)
 
 	cfg.end()

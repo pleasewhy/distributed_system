@@ -6,7 +6,11 @@ package mr
 // remember to capitalize all names.
 //
 
-import "os"
+import (
+	"net"
+	"net/rpc"
+	"os"
+)
 import "strconv"
 
 //
@@ -22,8 +26,21 @@ type ExampleReply struct {
 	Y int
 }
 
-// Add your RPC definitions here.
+type Reply struct {
+	WorkerId   int32
+	NRecude    int32
+	IsFinished bool
+	Test       bool
+	TaskInfo   *Task
+}
 
+type Args struct {
+	WorkerId int32
+	IFiles   []string
+	TaskInfo *Task
+}
+
+// Add your RPC definitions here.
 
 // Cook up a unique-ish UNIX-domain socket name
 // in /var/tmp, for the master.
@@ -33,4 +50,28 @@ func masterSock() string {
 	s := "/var/tmp/824-mr-"
 	s += strconv.Itoa(os.Getuid())
 	return s
+}
+
+const (
+	masterIP   = "127.0.0.1"
+	masterPort = 1234
+	clientAddr = "127.0.0.1"
+)
+
+func newRpcClient(port int) (*rpc.Client, error) {
+	masterAddr := net.TCPAddr{
+		IP:   []byte(masterIP),
+		Port: masterPort,
+		Zone: "",
+	}
+	clientAddr := net.TCPAddr{
+		IP:   []byte(clientAddr),
+		Port: port,
+		Zone: "",
+	}
+	conn, err := net.DialTCP("tcp", &masterAddr, &clientAddr)
+	if err != nil {
+		return nil, err
+	}
+	return rpc.NewClient(conn), nil
 }

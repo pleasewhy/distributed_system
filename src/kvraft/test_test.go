@@ -348,6 +348,7 @@ func GenericTestLinearizability(t *testing.T, part string, nclients int, nserver
 				nv := "x " + strconv.Itoa(cli) + " " + strconv.Itoa(j) + " y"
 				var inp models.KvInput
 				var out models.KvOutput
+
 				start := int64(time.Since(begin))
 				if (rand.Int() % 1000) < 500 {
 					Append(cfg, myck, key, nv)

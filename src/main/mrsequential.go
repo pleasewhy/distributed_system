@@ -81,6 +81,7 @@ func main() {
 		fmt.Fprintf(ofile, "%v %v\n", intermediate[i].Key, output)
 
 		i = j
+
 	}
 
 	ofile.Close()

@@ -7,7 +7,10 @@ package main
 // go build -buildmode=plugin rtiming.go
 //
 
-import "../mr"
+import (
+	"../mr"
+	"net/rpc"
+)
 import "fmt"
 import "os"
 import "syscall"
@@ -79,6 +82,6 @@ func Reduce(key string, values []string) string {
 	n := nparallel("reduce")
 
 	val := fmt.Sprintf("%d", n)
-
+	rpc.HandleHTTP()
 	return val
 }
