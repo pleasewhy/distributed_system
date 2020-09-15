@@ -209,6 +209,7 @@ func GenericTest(t *testing.T, part string, nclients int, unreliable bool, crash
 					// log.Printf("%d: client new append %v\n", cli, nv)
 					Append(cfg, myck, key, nv)
 					last = NextValue(last, nv)
+					fmt.Printf("last:key=%v,value=%v\n", key, last)
 					j++
 				} else {
 					// log.Printf("%d: client new get %v\n", cli, key)
@@ -439,7 +440,6 @@ func GenericTestLinearizability(t *testing.T, part string, nclients int, nserver
 				fmt.Printf("info: wrote history visualization to %s\n", file.Name())
 			}
 		}
-		t.Fatal("history is not linearizable")
 		t.Fatal("history is not linearizable")
 	} else if res == porcupine.Unknown {
 		fmt.Println("info: linearizability check timed out, assuming history is ok")

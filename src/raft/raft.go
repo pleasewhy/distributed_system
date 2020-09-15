@@ -60,7 +60,7 @@ type Entry struct {
 }
 
 func (entry *Entry) String() string {
-	return fmt.Sprintf("{command: %d, Term: %d}", entry.Command, entry.Term)
+	return fmt.Sprintf("{command: %v, Term: %d}", entry.Command, entry.Term)
 }
 
 //
@@ -95,8 +95,7 @@ type Raft struct {
 // return currentTerm and whether this server
 // believes it is the Leader.
 func (rf *Raft) GetState() (int, bool) {
-	rf.mu.Lock()
-	defer rf.mu.Unlock()
+	// TODO safety?
 	return rf.currentTerm, rf.state == Leader
 }
 
@@ -180,6 +179,7 @@ func (rf *Raft) convertToCandidate() {
 	rf.state = Candidate
 	rf.heartBeat = time.Now().UnixNano()
 	rf.timeout = getRandTimeout()
+	fmt.Printf("[%d] converting to candidate\n", rf.me)
 	rf.mu.Unlock()
 }
 
@@ -190,7 +190,7 @@ func (rf *Raft) convertToLeader() {
 		rf.matchIndex[i] = 0
 		rf.nextIndex[i] = len(rf.log)
 	}
-	DPrintf("[%d] converting to leader,logs:%v", rf.me, rf.log)
+	fmt.Printf("[%d] converting to leader\n", rf.me)
 	rf.mu.Unlock()
 	rf.appendRPCToAllServer()
 }
@@ -203,7 +203,7 @@ func (rf *Raft) convertToFollower(term int, locked bool) {
 	rf.changeTerm(term, true)
 	rf.state = Follower
 	rf.VoteFor = -1
-	//rf.heartBeat = time.Now().UnixNano()
+	fmt.Printf("[%d] converting to follower\n", rf.me)
 }
 
 func (rf *Raft) AttemptRequestVote() {
@@ -445,7 +445,7 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 	}
 
 	if args.Term < rf.currentTerm {
-		DPrintf("[%d] leader=%d.Term less than currentTerm\n", rf.me, args.LeaderId)
+		DPrintf("[%d] leader=%d'Term less than currentTerm\n", rf.me, args.LeaderId)
 		reply.Success = false
 		return
 	}
@@ -467,7 +467,7 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 		for commitIndex := rf.commitIndex + 1; commitIndex <= newCommitIndex; commitIndex++ {
 			msg := ApplyMsg{Command: rf.log[commitIndex].Command, CommandIndex: commitIndex, CommandValid: true}
 			DPrintf("[%d] update commitIndex to %d, %v", rf.me, commitIndex, msg)
-			rf.applyCh <- msg
+			rf.sendCommandToClient(rf.log[commitIndex].Command, true, commitIndex)
 		}
 		rf.commitIndex = newCommitIndex
 		//fmt.Printf("server %d:%v\n", rf.me, rf.log)
@@ -724,7 +724,7 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 	rf.appendLog(len(rf.log)-1, []*Entry{entry})
 	term := rf.currentTerm
 	rf.mu.Unlock()
-	rf.appendRPCToAllServer()
+	go rf.appendRPCToAllServer()
 	return index, term, true
 }
 

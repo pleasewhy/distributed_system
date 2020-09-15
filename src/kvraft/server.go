@@ -8,9 +8,10 @@ import (
 	"log"
 	"sync"
 	"sync/atomic"
+	"time"
 )
 
-const Debug = 0
+const Debug = 1
 
 const (
 	APPEND = iota
@@ -31,6 +32,7 @@ type Op struct {
 	Operation int
 	Key       string
 	Value     string
+	Id        int64
 }
 
 type KVServer struct {
@@ -38,10 +40,12 @@ type KVServer struct {
 	me           int
 	rf           *raft.Raft
 	applyCh      chan raft.ApplyMsg
+	noticeCh     chan bool
 	dead         int32 // set by Kill()
 	kvMap        map[string]string
 	maxraftstate int // snapshot if log grows this big
-
+	handleOpMap  map[int64]int64
+	successOpMap map[int64]int64
 	// Your definitions here.
 }
 
@@ -54,7 +58,6 @@ func (kv *KVServer) createSnapshot() ([]byte, error) {
 		return nil, err
 	}
 	return bf.Bytes(), nil
-
 }
 
 func (kv *KVServer) get0(key string) string {
@@ -64,33 +67,70 @@ func (kv *KVServer) get0(key string) string {
 	}
 	return v
 }
-func (kv *KVServer) set0(key string, value string) {
-	kv.kvMap[key] = value
-}
 
 func (kv *KVServer) Get(args *GetArgs, reply *GetReply) {
-	kv.mu.Lock()
-	defer kv.mu.Unlock()
+	_, isLeader := kv.rf.GetState()
+	if !isLeader {
+		reply.Err = ErrWrongLeader
+		return
+	}
+	DPrintf("[%d] ", kv.me)
+	//DPrintf("[%d] received Get Rpc request {%v}", kv.me, args.Key)
+	//kv.mu.Lock()
+	//defer kv.mu.Unlock()
 	reply.Value = kv.get0(args.Key)
+	reply.Err = OK
 }
 
 func (kv *KVServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
+	_, isLeader := kv.rf.GetState()
+	if !isLeader {
+		reply.Err = ErrWrongLeader
+		return
+	}
+
+	kv.mu.Lock()
+	defer kv.mu.Unlock()
+	DPrintf("[%d] received PutAppend Rpc request {key:%v,key:%v}", kv.me, args.Key, args.Value)
+	_, ok0 := kv.handleOpMap[args.Id]
+	if ok0 {
+		DPrintf("{key:%v, value:%v} handling", args.Key, args.Value)
+		reply.Err = ErrHandling
+		return
+	}
+
+	_, ok1 := kv.successOpMap[args.Id]
+	if ok1 {
+		DPrintf("{key:%v, value:%v} already successful", args.Key, args.Value)
+		reply.Err = OK
+		return
+	}
+
+	kv.handleOpMap[args.Id] = time.Now().UnixNano()
 	op := Op{
 		Operation: args.Op,
 		Key:       args.Key,
 		Value:     args.Value,
+		Id:        args.Id,
 	}
-	index, _, isLeader := kv.rf.Start(op)
-	if !isLeader {
-		reply.Err = ErrWrongLeader
-	}
-	applyMsg := <-kv.applyCh
-	if !applyMsg.CommandValid || applyMsg.CommandIndex != index {
-		reply.Err = ErrInternal
-	}
+	kv.rf.Start(op)
 
-	kv.kvMap[args.Key] = args.Value
-	// Your code here.
+	t := time.After(CommitTimeout)
+	var ok = true
+	reply.Err = OK
+
+	select {
+	case <-t:
+		ok = false
+	case <-kv.noticeCh:
+	}
+	delete(kv.handleOpMap, args.Id)
+	if !ok {
+		DPrintf("{key:%v, value:%v} internal error", args.Key, args.Value)
+		reply.Err = ErrInternal
+	} else {
+
+	}
 }
 
 //
@@ -115,6 +155,37 @@ func (kv *KVServer) killed() bool {
 }
 
 //
+//
+//
+func (kv *KVServer) applyCommitLogOfInRealTime() {
+	for !kv.killed() {
+		msg := <-kv.applyCh
+		if !msg.CommandValid {
+			continue
+		}
+		command := msg.Command
+		op := command.(Op)
+		_, isLeader := kv.rf.GetState()
+		if op.Operation == APPEND {
+			if isLeader {
+				DPrintf("[%d] Append operation {key:%v, value:%v}", kv.me, op.Key, op.Value)
+			}
+			kv.kvMap[op.Key] = kv.kvMap[op.Key] + op.Value
+		} else {
+			if isLeader {
+				DPrintf("[%d] Put operation {key:%v, value:%v}", kv.me, op.Key, op.Value)
+			}
+			kv.kvMap[op.Key] = op.Value
+		}
+		if !isLeader {
+			continue
+		}
+		kv.successOpMap[op.Id] = time.Now().UnixNano()
+		kv.noticeCh <- true
+	}
+}
+
+//
 // servers[] contains the ports of the set of
 // servers that will cooperate via Raft to
 // form the fault-tolerant key/value service.
@@ -136,13 +207,14 @@ func StartKVServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persiste
 	kv := new(KVServer)
 	kv.me = me
 	kv.maxraftstate = maxraftstate
-
-	// You may need initialization code here.
-
+	kv.kvMap = map[string]string{}
 	kv.applyCh = make(chan raft.ApplyMsg)
-	kv.rf = raft.Make(servers, me, persister, kv.applyCh)
-
 	// You may need initialization code here.
-
+	kv.noticeCh = make(chan bool)
+	kv.handleOpMap = map[int64]int64{}
+	kv.successOpMap = map[int64]int64{}
+	kv.rf = raft.Make(servers, me, persister, kv.applyCh)
+	// You may need initialization code here.
+	go kv.applyCommitLogOfInRealTime()
 	return kv
 }
