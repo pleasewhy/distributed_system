@@ -498,7 +498,6 @@ func (rf *Raft) callAppendEntries(server int) (*AppendEntriesReply, bool) {
 		return nil, false
 	}
 	rf.sending.Store(server, true)
-	rf.sending.Store(server, false)
 
 	var entries []*Entry
 	nextIndex := rf.nextIndex[server]
@@ -523,16 +522,17 @@ func (rf *Raft) callAppendEntries(server int) (*AppendEntriesReply, bool) {
 	// RPC, while it has already changed state and updated term.
 	if rf.state != Leader {
 		rf.mu.Unlock()
+		rf.sending.Store(server, false)
 		return nil, false
 	}
 
 	rf.mu.Unlock()
 	reply := &AppendEntriesReply{}
-	//fmt.Printf("sending append")
-	ok = rf.sendAppendEntriesTimeout(time.Millisecond*50, server, args, reply)
 
+	ok = rf.sendAppendEntriesTimeout(time.Millisecond*50, server, args, reply)
 	rf.mu.Lock()
 	defer rf.mu.Unlock()
+	defer rf.sending.Store(server, false)
 	if !ok || rf.state != Leader || rf.currentTerm != args.Term {
 		//DPrintf("[%d] send to %d failed", rf.me, server)
 		return nil, false
@@ -629,10 +629,13 @@ func (rf *Raft) checkHeartBeat() {
 func (rf *Raft) sendHeartBeatPeriodically() {
 	for !rf.killed() {
 		rf.mu.Lock()
-		if rf.state == Leader {
-			rf.AppendRPCToAllServer()
+		if rf.state != Leader {
+			rf.mu.Unlock()
+			time.Sleep(time.Millisecond * 100)
+			continue
 		}
 		rf.mu.Unlock()
+		rf.AppendRPCToAllServer()
 		time.Sleep(time.Millisecond * 100)
 	}
 }
