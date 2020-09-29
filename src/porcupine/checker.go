@@ -1,6 +1,8 @@
 package porcupine
 
 import (
+	"fmt"
+	"reflect"
 	"sort"
 	"sync/atomic"
 	"time"
@@ -13,20 +15,20 @@ const (
 	returnEntry           = true
 )
 
-type entry struct {
-	kind     entryKind
-	value    interface{}
+type Entry struct {
+	Kind     entryKind
+	Value    interface{}
 	id       int
 	time     int64
 	clientId int
 }
 
 type linearizationInfo struct {
-	history               [][]entry // for each partition, a list of entries
+	history               [][]Entry // for each partition, a list of entries
 	partialLinearizations [][][]int // for each partition, a set of histories (list of ids)
 }
 
-type byTime []entry
+type byTime []Entry
 
 func (a byTime) Len() int {
 	return len(a)
@@ -40,13 +42,13 @@ func (a byTime) Less(i, j int) bool {
 	return a[i].time < a[j].time
 }
 
-func makeEntries(history []Operation) []entry {
-	var entries []entry = nil
+func makeEntries(history []Operation) []Entry {
+	var entries []Entry = nil
 	id := 0
 	for _, elem := range history {
-		entries = append(entries, entry{
+		entries = append(entries, Entry{
 			callEntry, elem.Input, id, elem.Call, elem.ClientId})
-		entries = append(entries, entry{
+		entries = append(entries, Entry{
 			returnEntry, elem.Output, id, elem.Return, elem.ClientId})
 		id++
 	}
@@ -100,31 +102,32 @@ func renumber(events []Event) []Event {
 	return e
 }
 
-func convertEntries(events []Event) []entry {
-	var entries []entry
+func convertEntries(events []Event) []Entry {
+	var entries []Entry
 	for i, elem := range events {
 		kind := callEntry
 		if elem.Kind == ReturnEvent {
 			kind = returnEntry
 		}
 		// use index as "time"
-		entries = append(entries, entry{kind, elem.Value, elem.Id, int64(i), elem.ClientId})
+		entries = append(entries, Entry{kind, elem.Value, elem.Id, int64(i), elem.ClientId})
 	}
 	return entries
 }
 
-func makeLinkedEntries(entries []entry) *node {
+func makeLinkedEntries(entries []Entry) *node {
+
 	var root *node = nil
 	match := make(map[int]*node)
 	for i := len(entries) - 1; i >= 0; i-- {
 		elem := entries[i]
-		if elem.kind == returnEntry {
-			entry := &node{value: elem.value, match: nil, id: elem.id}
+		if elem.Kind == returnEntry {
+			entry := &node{value: elem.Value, match: nil, id: elem.id}
 			match[elem.id] = entry
 			insertBefore(entry, root)
 			root = entry
 		} else {
-			entry := &node{value: elem.value, match: match[elem.id], id: elem.id}
+			entry := &node{value: elem.Value, match: match[elem.id], id: elem.id}
 			insertBefore(entry, root)
 			root = entry
 		}
@@ -171,13 +174,13 @@ func unlift(entry *node) {
 	entry.next.prev = entry
 }
 
-func checkSingle(model Model, history []entry, computePartial bool, kill *int32) (bool, []*[]int) {
+func checkSingle(model Model, history []Entry, computePartial bool, kill *int32) (bool, []*[]int) {
 	entry := makeLinkedEntries(history)
 	n := length(entry) / 2
 	linearized := newBitset(uint(n))
-	cache := make(map[uint64][]cacheEntry) // map from hash to cache entry
+	cache := make(map[uint64][]cacheEntry) // map from hash to cache Entry
 	var calls []callsEntry
-	// longest linearizable prefix that includes the given entry
+	// longest linearizable prefix that includes the given Entry
 	longest := make([]*[]int, n)
 
 	state := model.Init()
@@ -187,7 +190,7 @@ func checkSingle(model Model, history []entry, computePartial bool, kill *int32)
 			return false, longest
 		}
 		if entry.match != nil {
-			matching := entry.match // the return entry
+			matching := entry.match // the return Entry
 			ok, newState := model.Step(state, entry.value, matching.value)
 			if ok {
 				newLinearized := linearized.clone().set(uint(entry.id))
@@ -266,14 +269,14 @@ func fillDefault(model Model) Model {
 	return model
 }
 
-func checkParallel(model Model, history [][]entry, computeInfo bool, timeout time.Duration) (CheckResult, linearizationInfo) {
+func checkParallel(model Model, history [][]Entry, computeInfo bool, timeout time.Duration) (CheckResult, linearizationInfo) {
 	ok := true
 	timedOut := false
 	results := make(chan bool, len(history))
 	longest := make([][]*[]int, len(history))
 	kill := int32(0)
 	for i, subhistory := range history {
-		go func(i int, subhistory []entry) {
+		go func(i int, subhistory []Entry) {
 			ok, l := checkSingle(model, subhistory, computeInfo, &kill)
 			longest[i] = l
 			results <- ok
@@ -300,6 +303,7 @@ loop:
 		case <-timeoutChan:
 			timedOut = true
 			atomic.StoreInt32(&kill, 1)
+			fmt.Println("check linearizability timeout")
 			break loop // if we time out, we might get a false positive
 		}
 	}
@@ -350,7 +354,7 @@ loop:
 func checkEvents(model Model, history []Event, verbose bool, timeout time.Duration) (CheckResult, linearizationInfo) {
 	model = fillDefault(model)
 	partitions := model.PartitionEvent(history)
-	l := make([][]entry, len(partitions))
+	l := make([][]Entry, len(partitions))
 	for i, subhistory := range partitions {
 		l[i] = convertEntries(renumber(subhistory))
 	}
@@ -360,9 +364,28 @@ func checkEvents(model Model, history []Event, verbose bool, timeout time.Durati
 func checkOperations(model Model, history []Operation, verbose bool, timeout time.Duration) (CheckResult, linearizationInfo) {
 	model = fillDefault(model)
 	partitions := model.Partition(history)
-	l := make([][]entry, len(partitions))
+	l := make([][]Entry, len(partitions))
 	for i, subhistory := range partitions {
 		l[i] = makeEntries(subhistory)
 	}
+	//Pf(l)
 	return checkParallel(model, l, verbose, timeout)
+}
+
+func pf0(entry Entry) {
+	if entry.Kind {
+		reflect.ValueOf(entry).FieldByName("Value")
+		fmt.Printf("return: value %v\n",
+			//reflect.ValueOf(l[0][i]).FieldByName("Value").Elem().FieldByName("Value")
+			reflect.ValueOf(entry).FieldByName("Value"),
+		)
+	} else {
+		fmt.Printf("call: key:%v value:%v\n", reflect.ValueOf(entry).FieldByName("Key"),
+			reflect.ValueOf(entry).FieldByName("Value"))
+	}
+}
+func Pf(l [][]Entry) {
+	for i := 0; i < len(l[0]); i++ {
+		pf0(l[0][i])
+	}
 }

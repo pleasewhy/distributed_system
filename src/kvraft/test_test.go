@@ -209,7 +209,6 @@ func GenericTest(t *testing.T, part string, nclients int, unreliable bool, crash
 					// log.Printf("%d: client new append %v\n", cli, nv)
 					Append(cfg, myck, key, nv)
 					last = NextValue(last, nv)
-					fmt.Printf("last:key=%v,value=%v\n", key, last)
 					j++
 				} else {
 					// log.Printf("%d: client new get %v\n", cli, key)
@@ -427,7 +426,7 @@ func GenericTestLinearizability(t *testing.T, part string, nclients int, nserver
 
 	cfg.end()
 
-	res, info := porcupine.CheckOperationsVerbose(models.KvModel, operations, linearizabilityCheckTimeout)
+	res, info := porcupine.CheckOperationsVerbose(models.KvModel, operations, 0)
 	if res == porcupine.Illegal {
 		file, err := ioutil.TempFile("", "*.html")
 		if err != nil {

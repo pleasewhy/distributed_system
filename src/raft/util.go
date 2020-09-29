@@ -1,6 +1,8 @@
 package raft
 
-import "log"
+import (
+	"log"
+)
 
 // Debugging
 var Debug = 0

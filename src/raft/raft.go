@@ -21,6 +21,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"log"
 	"math/rand"
 	"sync"
 	"time"
@@ -179,20 +180,20 @@ func (rf *Raft) convertToCandidate() {
 	rf.state = Candidate
 	rf.heartBeat = time.Now().UnixNano()
 	rf.timeout = getRandTimeout()
-	fmt.Printf("[%d] converting to candidate\n", rf.me)
+	log.Printf("[%d] converting to candidate\n", rf.me)
 	rf.mu.Unlock()
 }
 
 func (rf *Raft) convertToLeader() {
 	rf.mu.Lock()
-	rf.state = Leader
 	for i, _ := range rf.peers {
 		rf.matchIndex[i] = 0
 		rf.nextIndex[i] = len(rf.log)
 	}
-	fmt.Printf("[%d] converting to leader\n", rf.me)
+	log.Printf("[%d] converting to leader\n", rf.me)
+	rf.state = Leader
 	rf.mu.Unlock()
-	rf.appendRPCToAllServer()
+	rf.Start(nil)
 }
 
 func (rf *Raft) convertToFollower(term int, locked bool) {
@@ -203,7 +204,7 @@ func (rf *Raft) convertToFollower(term int, locked bool) {
 	rf.changeTerm(term, true)
 	rf.state = Follower
 	rf.VoteFor = -1
-	fmt.Printf("[%d] converting to follower\n", rf.me)
+	log.Printf("[%d] converting to follower\n", rf.me)
 }
 
 func (rf *Raft) AttemptRequestVote() {
@@ -480,7 +481,7 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 //
 // return whether the call was successful, and the number of entries sent
 //
-func (rf *Raft) callAppendEntries(server int, appendLog bool) (*AppendEntriesReply, bool) {
+func (rf *Raft) callAppendEntries(server int) (*AppendEntriesReply, bool) {
 	var args *AppendEntriesArgs
 	rf.mu.Lock()
 	boolObj, ok := rf.sending.Load(server)
@@ -497,6 +498,7 @@ func (rf *Raft) callAppendEntries(server int, appendLog bool) (*AppendEntriesRep
 		return nil, false
 	}
 	rf.sending.Store(server, true)
+	rf.sending.Store(server, false)
 
 	var entries []*Entry
 	nextIndex := rf.nextIndex[server]
@@ -526,11 +528,11 @@ func (rf *Raft) callAppendEntries(server int, appendLog bool) (*AppendEntriesRep
 
 	rf.mu.Unlock()
 	reply := &AppendEntriesReply{}
-
+	//fmt.Printf("sending append")
 	ok = rf.sendAppendEntriesTimeout(time.Millisecond*50, server, args, reply)
+
 	rf.mu.Lock()
 	defer rf.mu.Unlock()
-	defer rf.sending.Store(server, false)
 	if !ok || rf.state != Leader || rf.currentTerm != args.Term {
 		//DPrintf("[%d] send to %d failed", rf.me, server)
 		return nil, false
@@ -566,12 +568,13 @@ func (rf *Raft) callAppendEntries(server int, appendLog bool) (*AppendEntriesRep
 				rf.sendCommandToClient(rf.log[i].Command, true, i)
 			}
 		}
+		return reply, true
 	} else {
 		//fmt.Printf("[%d] %d 匹配失败,nextIndex:%d,command:%v\n args:%v reply:%v\n", rf.me, server,
 		//	rf.nextIndex[server], rf.log[rf.nextIndex[server]-1].Command, args, reply)
 		rf.nextIndex[server] = reply.LastTermIndex + 1
 	}
-	return reply, ok
+	return reply, false
 }
 
 //
@@ -592,54 +595,21 @@ func (rf *Raft) sendAppendEntriesTimeout(timeout time.Duration, server int, args
 	return ok
 }
 func (rf *Raft) sendCommandToClient(command interface{}, commandValid bool, commandIndex int) {
+	if command == nil {
+		commandValid = false
+	}
 	msg := ApplyMsg{
 		CommandValid: commandValid,
 		Command:      command,
 		CommandIndex: commandIndex,
 	}
-	DPrintf("[%d] commit successfully:%v\n", rf.me, msg)
+	DPrintf("[%d] commit successfully:%v", rf.me, msg)
 	rf.applyCh <- msg
-}
-
-func (rf *Raft) appendLogToAllServer() {
-	successNum := 1
-	serverNum := len(rf.peers)
-	var isSuccess [10]bool
-	done := false
-	wg := sync.WaitGroup{}
-	mu := sync.Mutex{}
-
-	for i, _ := range rf.peers {
-		if i == rf.me || isSuccess[i] {
-			continue
-		}
-		wg.Add(1)
-		server := i
-		go func() {
-			defer wg.Done()
-			//DPrintf("[%d] send AppendEntries RPC to %d, nextIndex:%d.\n", rf.me, server, rf.nextIndex[server])
-			reply, ok := rf.callAppendEntries(server, true)
-			mu.Lock()
-			defer mu.Unlock()
-
-			if !ok || done {
-				return
-			}
-			if reply.Success {
-				successNum++
-				isSuccess[server] = true
-				if successNum > serverNum/2 {
-					done = true
-				}
-			}
-		}()
-	}
-	wg.Wait()
 }
 
 //
 // check whether the heartbeat message sent by the Leader has timeout
-//`
+//
 func (rf *Raft) checkHeartBeat() {
 	for !rf.killed() {
 		rf.mu.Lock()
@@ -657,17 +627,12 @@ func (rf *Raft) checkHeartBeat() {
 // send heart beat message to all server periodically
 //
 func (rf *Raft) sendHeartBeatPeriodically() {
-
 	for !rf.killed() {
 		rf.mu.Lock()
-		if rf.state != Leader {
-			rf.mu.Unlock()
-			time.Sleep(time.Millisecond * 100)
-			continue
+		if rf.state == Leader {
+			rf.AppendRPCToAllServer()
 		}
 		rf.mu.Unlock()
-		rf.appendRPCToAllServer()
-
 		time.Sleep(time.Millisecond * 100)
 	}
 }
@@ -677,9 +642,10 @@ func (rf *Raft) sendHeartBeatPeriodically() {
 //
 // return the number of AppendEntriesReply.success==true
 //
-func (rf *Raft) appendRPCToAllServer() {
+func (rf *Raft) AppendRPCToAllServer() int {
 	wg := sync.WaitGroup{}
 
+	successNum := 1
 	for i := 0; i < len(rf.peers); i++ {
 		if i == rf.me {
 			continue
@@ -687,15 +653,22 @@ func (rf *Raft) appendRPCToAllServer() {
 		server := i
 		wg.Add(1)
 		go func() {
-			_, ok := rf.callAppendEntries(server, false)
-			if !ok {
-				wg.Done()
-				return
+			_, ok := rf.callAppendEntries(server)
+			if ok {
+				successNum++
 			}
 			wg.Done()
 		}()
 	}
 	wg.Wait()
+	return successNum
+}
+
+//
+//  check whether the leader can connect the majority server
+//
+func (rf *Raft) IsConnectMajority() bool {
+	return rf.AppendRPCToAllServer() > len(rf.peers)/2
 }
 
 //
@@ -724,7 +697,7 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 	rf.appendLog(len(rf.log)-1, []*Entry{entry})
 	term := rf.currentTerm
 	rf.mu.Unlock()
-	go rf.appendRPCToAllServer()
+	go rf.AppendRPCToAllServer()
 	return index, term, true
 }
 
@@ -781,14 +754,17 @@ func Make(peers []*labrpc.ClientEnd, me int,
 	rf := &Raft{}
 	rf.identifier = rand.Int63() % 1000
 	rf.peers = peers
-	rf.persister = persister
 	rf.me = me
 	rf.heartBeat = time.Now().UnixNano()
-	rf.VoteFor = -1
 	// Your initialization code here (2A, 2B, 2C).
 	rf.timeout = getRandTimeout()
 	rf.applyCh = applyCh
+
+	rf.persister = persister
+	rf.VoteFor = -1
 	rf.log = append(rf.log, &Entry{Term: 0, Command: 0})
+	rf.currentTerm = 0
+	rf.readPersist(persister.ReadRaftState())
 
 	for range peers {
 		rf.matchIndex = append(rf.matchIndex, 0)
@@ -796,7 +772,6 @@ func Make(peers []*labrpc.ClientEnd, me int,
 	}
 	DPrintf("[%d] timeout:%dms", rf.me, rf.timeout/1_000_000)
 	// initialize from state persisted before a crash
-	rf.readPersist(persister.ReadRaftState())
 	go rf.sendHeartBeatPeriodically()
 	go rf.checkHeartBeat()
 	return rf

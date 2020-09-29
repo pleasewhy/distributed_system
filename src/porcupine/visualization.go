@@ -40,15 +40,15 @@ func computeVisualizationData(model Model, info linearizationInfo) visualization
 		callValue := make(map[int]interface{})
 		returnValue := make(map[int]interface{})
 		for _, elem := range info.history[partition] {
-			switch elem.kind {
+			switch elem.Kind {
 			case callEntry:
 				history[elem.id].ClientId = elem.clientId
 				history[elem.id].Start = elem.time
-				callValue[elem.id] = elem.value
+				callValue[elem.id] = elem.Value
 			case returnEntry:
 				history[elem.id].End = elem.time
-				history[elem.id].Description = model.DescribeOperation(callValue[elem.id], elem.value)
-				returnValue[elem.id] = elem.value
+				history[elem.id].Description = model.DescribeOperation(callValue[elem.id], elem.Value)
+				returnValue[elem.id] = elem.Value
 			}
 		}
 		// partial linearizations

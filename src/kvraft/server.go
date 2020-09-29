@@ -36,17 +36,19 @@ type Op struct {
 }
 
 type KVServer struct {
-	mu           sync.Mutex
-	me           int
-	rf           *raft.Raft
-	applyCh      chan raft.ApplyMsg
-	noticeCh     chan bool
-	dead         int32 // set by Kill()
-	kvMap        map[string]string
-	maxraftstate int // snapshot if log grows this big
-	handleOpMap  map[int64]int64
-	successOpMap map[int64]int64
-	// Your definitions here.
+	mu       sync.Mutex
+	mapMu    sync.Mutex
+	me       int
+	rf       *raft.Raft
+	applyCh  chan raft.ApplyMsg
+	noticeCh chan bool
+	dead     int32 // set by Kill()
+	kvMap    map[string]string
+
+	maxraftstate   int // snapshot if log grows this big
+	successOpMap   sync.Map
+	isHandling     bool
+	handlingReqMap sync.Map // save the Op being 	handled
 }
 
 // create a snapshot of the kvMap and returns the encoded byte array.
@@ -61,6 +63,8 @@ func (kv *KVServer) createSnapshot() ([]byte, error) {
 }
 
 func (kv *KVServer) get0(key string) string {
+	kv.mapMu.Lock()
+	defer kv.mapMu.Unlock()
 	v, ok := kv.kvMap[key]
 	if !ok {
 		return ""
@@ -69,50 +73,52 @@ func (kv *KVServer) get0(key string) string {
 }
 
 func (kv *KVServer) Get(args *GetArgs, reply *GetReply) {
-	_, isLeader := kv.rf.GetState()
+	term, isLeader := kv.rf.GetState()
 	if !isLeader {
 		reply.Err = ErrWrongLeader
 		return
 	}
 	DPrintf("[%d] ", kv.me)
 	//DPrintf("[%d] received Get Rpc request {%v}", kv.me, args.Key)
-	//kv.mu.Lock()
-	//defer kv.mu.Unlock()
+	if !kv.rf.IsConnectMajority() {
+		reply.Err = ErrWrongLeader
+		return
+	}
+	t, _ := kv.rf.GetState()
+	if t != term {
+		reply.Err = ErrInternal
+		return
+	}
 	reply.Value = kv.get0(args.Key)
 	reply.Err = OK
 }
 
 func (kv *KVServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
+	kv.mu.Lock()
+	defer kv.mu.Unlock()
+
 	_, isLeader := kv.rf.GetState()
 	if !isLeader {
 		reply.Err = ErrWrongLeader
 		return
 	}
+	DPrintf("[%d] received PutAppend Rpc request {key:%v, value:%v}", kv.me, args.Key, args.Value)
 
-	kv.mu.Lock()
-	defer kv.mu.Unlock()
-	DPrintf("[%d] received PutAppend Rpc request {key:%v,key:%v}", kv.me, args.Key, args.Value)
-	_, ok0 := kv.handleOpMap[args.Id]
-	if ok0 {
-		DPrintf("{key:%v, value:%v} handling", args.Key, args.Value)
-		reply.Err = ErrHandling
-		return
-	}
-
-	_, ok1 := kv.successOpMap[args.Id]
+	_, ok1 := kv.successOpMap.Load(args.Id)
 	if ok1 {
 		DPrintf("{key:%v, value:%v} already successful", args.Key, args.Value)
 		reply.Err = OK
 		return
 	}
-
-	kv.handleOpMap[args.Id] = time.Now().UnixNano()
+	kv.isHandling = true
+	kv.handlingReqMap.Store(args.Id, true)
 	op := Op{
 		Operation: args.Op,
 		Key:       args.Key,
 		Value:     args.Value,
 		Id:        args.Id,
 	}
+
 	kv.rf.Start(op)
 
 	t := time.After(CommitTimeout)
@@ -120,16 +126,17 @@ func (kv *KVServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
 	reply.Err = OK
 
 	select {
+	case <-kv.noticeCh:
 	case <-t:
 		ok = false
-	case <-kv.noticeCh:
 	}
-	delete(kv.handleOpMap, args.Id)
-	if !ok {
+	kv.isHandling = false
+	kv.handlingReqMap.Delete(args.Id)
+	if _, isLeader := kv.rf.GetState(); !isLeader || !ok {
 		DPrintf("{key:%v, value:%v} internal error", args.Key, args.Value)
 		reply.Err = ErrInternal
 	} else {
-
+		kv.successOpMap.Delete(args.LastOpId)
 	}
 }
 
@@ -154,9 +161,6 @@ func (kv *KVServer) killed() bool {
 	return z == 1
 }
 
-//
-//
-//
 func (kv *KVServer) applyCommitLogOfInRealTime() {
 	for !kv.killed() {
 		msg := <-kv.applyCh
@@ -165,7 +169,11 @@ func (kv *KVServer) applyCommitLogOfInRealTime() {
 		}
 		command := msg.Command
 		op := command.(Op)
+		if _, ok := kv.successOpMap.Load(op.Id); ok {
+			continue
+		}
 		_, isLeader := kv.rf.GetState()
+		kv.mapMu.Lock()
 		if op.Operation == APPEND {
 			if isLeader {
 				DPrintf("[%d] Append operation {key:%v, value:%v}", kv.me, op.Key, op.Value)
@@ -177,11 +185,12 @@ func (kv *KVServer) applyCommitLogOfInRealTime() {
 			}
 			kv.kvMap[op.Key] = op.Value
 		}
-		if !isLeader {
-			continue
+		kv.mapMu.Unlock()
+		kv.successOpMap.Store(op.Id, true)
+		_, ok := kv.handlingReqMap.Load(op.Id)
+		if ok {
+			kv.noticeCh <- true
 		}
-		kv.successOpMap[op.Id] = time.Now().UnixNano()
-		kv.noticeCh <- true
 	}
 }
 
@@ -203,17 +212,18 @@ func StartKVServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persiste
 	// call labgob.Register on structures you want
 	// Go's RPC library to marshall/unmarshall.
 	labgob.Register(Op{})
-
+	_, _ = DPrintf("start kv server")
 	kv := new(KVServer)
 	kv.me = me
 	kv.maxraftstate = maxraftstate
 	kv.kvMap = map[string]string{}
 	kv.applyCh = make(chan raft.ApplyMsg)
-	// You may need initialization code here.
+
 	kv.noticeCh = make(chan bool)
-	kv.handleOpMap = map[int64]int64{}
-	kv.successOpMap = map[int64]int64{}
+	kv.successOpMap = sync.Map{}
+	kv.handlingReqMap = sync.Map{}
 	kv.rf = raft.Make(servers, me, persister, kv.applyCh)
+
 	// You may need initialization code here.
 	go kv.applyCommitLogOfInRealTime()
 	return kv

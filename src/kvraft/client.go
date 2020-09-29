@@ -2,7 +2,6 @@ package kvraft
 
 import (
 	"../labrpc"
-	"fmt"
 	"sync"
 	"time"
 )
@@ -46,11 +45,16 @@ func MakeClerk(servers []*labrpc.ClientEnd) *Clerk {
 func (ck *Clerk) Get(key string) string {
 	DPrintf("send get request key = %s.", key)
 	args := &GetArgs{Key: key}
+	reply := &GetReply{}
+	ok := ck.callGetRpc(ck.currentLeader, time.Millisecond*200, args, reply)
+	if ok && reply.Err == OK {
+		return reply.Value
+	}
 	for {
 		//ck.servers[ck.currentLeader].Call("KVServer.Get", args, reply)
 		for i := 0; i < len(ck.servers); i++ {
 			reply := &GetReply{}
-			ok := ck.callGetRpc(i, time.Millisecond*50, args, reply)
+			ok := ck.callGetRpc(i, time.Millisecond*200, args, reply)
 			if !ok {
 				//fmt.Printf("call %d get failed\n", i)
 				continue
@@ -58,7 +62,7 @@ func (ck *Clerk) Get(key string) string {
 
 			if reply.Err == OK {
 				ck.currentLeader = i
-				fmt.Printf("get finish {key:%v, value:%v}\n", args.Key, reply.Value)
+				//fmt.Printf("get finish {key:%v, value:%v}\n", args.Key, reply.Value)
 				return reply.Value
 			}
 		}
@@ -91,6 +95,11 @@ func (ck *Clerk) PutAppend(key string, value string, op int) {
 		Id:       nrand(),
 		LastOpId: ck.lastOpId,
 	}
+	reply := &PutAppendReply{}
+	ok := ck.callAppendPutRpc(ck.currentLeader, time.Millisecond*200, args, reply)
+	if ok && reply.Err == OK {
+		return
+	}
 	//
 	// Firstly attempting the leader of local cached, if it isn't a leader, attempting all
 	// server and cache the leader.
@@ -111,7 +120,7 @@ func (ck *Clerk) PutAppend(key string, value string, op int) {
 			if reply.Err == OK {
 				ck.currentLeader = i
 				ck.lastOpId = args.Id
-				fmt.Printf("{key:%v, value:%v} finish\n.", key, value)
+				DPrintf("{key:%v, value:%v} finish.\n", key, value)
 				return
 			} else {
 				if reply.Err != ErrWrongLeader {
