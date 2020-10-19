@@ -1,0 +1,527 @@
+2020/10/12 22:10:29 Test: InstallSnapshot RPC (3B) ...
+2020/10/12 22:10:29 [1] converting to candidate, currentTerm=1, lastLogTerm=0,log.length=1
+2020/10/12 22:10:29 [2] converting to follower, currentTerm=1, lastLogTerm=0,log.length=1
+2020/10/12 22:10:29 [0] converting to follower, currentTerm=1, lastLogTerm=0,log.length=1
+2020/10/12 22:10:29 [0] converting to follower, currentTerm=1, lastLogTerm=0,log.length=1
+2020/10/12 22:10:29 [2] converting to follower, currentTerm=1, lastLogTerm=0,log.length=1
+2020/10/12 22:10:29 [1] obtain vote from 0.
+2020/10/12 22:10:29 [1] converting to leader, currentTerm=1, lastLogTerm=0,log.length=1
+2020/10/12 22:10:29 partition servers into: [0 1] [2]
+2020/10/12 22:10:30 [2] converting to candidate, currentTerm=2, lastLogTerm=1,log.length=3
+2020/10/12 22:10:30 partition servers into: [0 2] [1]
+2020/10/12 22:10:31 [2] converting to candidate, currentTerm=3, lastLogTerm=1,log.length=3
+2020/10/12 22:10:31 [0] converting to follower, currentTerm=3, lastLogTerm=1,log.length=54
+2020/10/12 22:10:31 [0] converting to candidate, currentTerm=4, lastLogTerm=1,log.length=54
+2020/10/12 22:10:31 [2] converting to follower, currentTerm=4, lastLogTerm=1,log.length=3
+2020/10/12 22:10:31 [2] converting to follower, currentTerm=4, lastLogTerm=1,log.length=3
+2020/10/12 22:10:31 [0] obtain vote from 2.
+2020/10/12 22:10:31 [0] converting to leader, currentTerm=4, lastLogTerm=1,log.length=54
+2020/10/12 22:10:31 partition servers into: [0 1 2] []
+2020/10/12 22:10:31 [1] converting to follower, currentTerm=4, lastLogTerm=1,log.length=55
+2020/10/12 22:10:31 [1] converting to candidate, currentTerm=5, lastLogTerm=1,log.length=55
+2020/10/12 22:10:31 [2] converting to follower, currentTerm=5, lastLogTerm=4,log.length=57
+2020/10/12 22:10:31 [0] converting to follower, currentTerm=5, lastLogTerm=4,log.length=57
+2020/10/12 22:10:32 [0] converting to candidate, currentTerm=6, lastLogTerm=4,log.length=57
+2020/10/12 22:10:32 [2] converting to follower, currentTerm=6, lastLogTerm=4,log.length=57
+2020/10/12 22:10:32 [2] converting to follower, currentTerm=6, lastLogTerm=4,log.length=57
+2020/10/12 22:10:32 [1] converting to follower, currentTerm=6, lastLogTerm=1,log.length=55
+2020/10/12 22:10:32 [1] converting to follower, currentTerm=6, lastLogTerm=1,log.length=55
+2020/10/12 22:10:32 [0] obtain vote from 2.
+2020/10/12 22:10:32 [0] converting to leader, currentTerm=6, lastLogTerm=4,log.length=57
+2020/10/12 22:10:32   ... Passed --
+2020/10/12 22:10:32    2.8  3   216   63
+2020/10/12 22:10:32 Test: snapshot size is reasonable (3B) ...
+2020/10/12 22:10:32 [0] converting to candidate, currentTerm=1, lastLogTerm=0,log.length=1
+2020/10/12 22:10:32 [2] converting to follower, currentTerm=1, lastLogTerm=0,log.length=1
+2020/10/12 22:10:32 [2] converting to follower, currentTerm=1, lastLogTerm=0,log.length=1
+2020/10/12 22:10:32 [1] converting to follower, currentTerm=1, lastLogTerm=0,log.length=1
+2020/10/12 22:10:32 [1] converting to follower, currentTerm=1, lastLogTerm=0,log.length=1
+2020/10/12 22:10:32 [0] obtain vote from 2.
+2020/10/12 22:10:32 [0] converting to leader, currentTerm=1, lastLogTerm=0,log.length=1
+2020/10/12 22:10:32 [0] discard logs that index<77,the log is {command: {1 x 1 389971995166636420}, Term: 1}
+2020/10/12 22:10:32 [2] discard logs that index<77,the log is {command: {1 x 1 389971995166636420}, Term: 1}
+2020/10/12 22:10:32 [1] discard logs that index<77,the log is {command: {1 x 1 389971995166636420}, Term: 1}
+2020/10/12 22:10:32 [0] discard logs that index<152,the log is {command: {1 x 0 1821568070227042692}, Term: 1}
+2020/10/12 22:10:32 [2] discard logs that index<152,the log is {command: {1 x 0 1821568070227042692}, Term: 1}
+2020/10/12 22:10:32 [1] discard logs that index<152,the log is {command: {1 x 0 1821568070227042692}, Term: 1}
+2020/10/12 22:10:32 [0] discard logs that index<227,the log is {command: {1 x 1 2961671934385497162}, Term: 1}
+2020/10/12 22:10:32 [1] discard logs that index<227,the log is {command: {1 x 1 2961671934385497162}, Term: 1}
+2020/10/12 22:10:32 [2] discard logs that index<227,the log is {command: {1 x 1 2961671934385497162}, Term: 1}
+2020/10/12 22:10:32 [0] discard logs that index<302,the log is {command: {1 x 0 4103103119396993886}, Term: 1}
+2020/10/12 22:10:32 [2] discard logs that index<302,the log is {command: {1 x 0 4103103119396993886}, Term: 1}
+2020/10/12 22:10:32 [1] discard logs that index<302,the log is {command: {1 x 0 4103103119396993886}, Term: 1}
+2020/10/12 22:10:32 [0] discard logs that index<377,the log is {command: {1 x 1 4489927736343562651}, Term: 1}
+2020/10/12 22:10:32 [2] discard logs that index<377,the log is {command: {1 x 1 4489927736343562651}, Term: 1}
+2020/10/12 22:10:32 [1] discard logs that index<377,the log is {command: {1 x 1 4489927736343562651}, Term: 1}
+--- FAIL: TestSnapshotSize3B (0.72s)
+    test_test.go:705: snapshot too large (3808 > 500)
+2020/10/12 22:10:32 Test: restarts, snapshots, one client (3B) ...
+2020/10/12 22:10:33 [0] converting to candidate, currentTerm=1, lastLogTerm=0,log.length=1
+2020/10/12 22:10:33 [4] converting to follower, currentTerm=1, lastLogTerm=0,log.length=1
+2020/10/12 22:10:33 [2] converting to follower, currentTerm=1, lastLogTerm=0,log.length=1
+2020/10/12 22:10:33 [2] converting to follower, currentTerm=1, lastLogTerm=0,log.length=1
+2020/10/12 22:10:33 [1] converting to follower, currentTerm=1, lastLogTerm=0,log.length=1
+2020/10/12 22:10:33 [1] converting to follower, currentTerm=1, lastLogTerm=0,log.length=1
+2020/10/12 22:10:33 [4] converting to follower, currentTerm=1, lastLogTerm=0,log.length=1
+2020/10/12 22:10:33 [3] converting to follower, currentTerm=1, lastLogTerm=0,log.length=1
+2020/10/12 22:10:33 [3] converting to follower, currentTerm=1, lastLogTerm=0,log.length=1
+2020/10/12 22:10:33 [0] obtain vote from 1.
+2020/10/12 22:10:33 [0] obtain vote from 2.
+2020/10/12 22:10:33 [0] converting to leader, currentTerm=1, lastLogTerm=0,log.length=1
+2020/10/12 22:10:33 [0] discard logs that index<73,the log is {command: {0 0 x 0 70 y 1056501532898141328}, Term: 1}
+2020/10/12 22:10:33 [4] discard logs that index<73,the log is {command: {0 0 x 0 70 y 1056501532898141328}, Term: 1}
+2020/10/12 22:10:33 [1] discard logs that index<73,the log is {command: {0 0 x 0 70 y 1056501532898141328}, Term: 1}
+2020/10/12 22:10:33 [3] discard logs that index<73,the log is {command: {0 0 x 0 70 y 1056501532898141328}, Term: 1}
+2020/10/12 22:10:33 [2] discard logs that index<73,the log is {command: {0 0 x 0 70 y 1056501532898141328}, Term: 1}
+2020/10/12 22:10:33 [0] discard logs that index<144,the log is {command: {0 0 x 0 141 y 3594163459616911818}, Term: 1}
+2020/10/12 22:10:33 [4] discard logs that index<144,the log is {command: {0 0 x 0 141 y 3594163459616911818}, Term: 1}
+2020/10/12 22:10:33 [3] discard logs that index<144,the log is {command: {0 0 x 0 141 y 3594163459616911818}, Term: 1}
+2020/10/12 22:10:33 [1] discard logs that index<144,the log is {command: {0 0 x 0 141 y 3594163459616911818}, Term: 1}
+2020/10/12 22:10:33 [2] discard logs that index<144,the log is {command: {0 0 x 0 141 y 3594163459616911818}, Term: 1}
+2020/10/12 22:10:33 [0] discard logs that index<214,the log is {command: {0 0 x 0 211 y 3191840742436166567}, Term: 1}
+2020/10/12 22:10:33 [2] discard logs that index<214,the log is {command: {0 0 x 0 211 y 3191840742436166567}, Term: 1}
+2020/10/12 22:10:33 [4] discard logs that index<214,the log is {command: {0 0 x 0 211 y 3191840742436166567}, Term: 1}
+2020/10/12 22:10:33 [1] discard logs that index<214,the log is {command: {0 0 x 0 211 y 3191840742436166567}, Term: 1}
+2020/10/12 22:10:33 [3] discard logs that index<214,the log is {command: {0 0 x 0 211 y 3191840742436166567}, Term: 1}
+2020/10/12 22:10:33 [4] discard logs that index<283,the log is {command: {0 0 x 0 280 y 1477422442275504423}, Term: 1}
+2020/10/12 22:10:33 [0] discard logs that index<284,the log is {command: {0 0 x 0 281 y 3548012883645136196}, Term: 1}
+2020/10/12 22:10:33 [1] discard logs that index<283,the log is {command: {0 0 x 0 280 y 1477422442275504423}, Term: 1}
+2020/10/12 22:10:33 [2] discard logs that index<283,the log is {command: {0 0 x 0 280 y 1477422442275504423}, Term: 1}
+2020/10/12 22:10:33 [3] discard logs that index<283,the log is {command: {0 0 x 0 280 y 1477422442275504423}, Term: 1}
+2020/10/12 22:10:33 [4] discard logs that index<353,the log is {command: {0 0 x 0 350 y 2935657042338819052}, Term: 1}
+2020/10/12 22:10:33 [3] discard logs that index<353,the log is {command: {0 0 x 0 350 y 2935657042338819052}, Term: 1}
+2020/10/12 22:10:33 [1] discard logs that index<353,the log is {command: {0 0 x 0 350 y 2935657042338819052}, Term: 1}
+2020/10/12 22:10:33 [2] discard logs that index<353,the log is {command: {0 0 x 0 350 y 2935657042338819052}, Term: 1}
+2020/10/12 22:10:33 [0] discard logs that index<354,the log is {command: {0 0 x 0 351 y 2218784952859663024}, Term: 1}
+2020/10/12 22:10:33 [1] discard logs that index<422,the log is {command: {0 0 x 0 419 y 3807360812542972153}, Term: 1}
+2020/10/12 22:10:33 [2] discard logs that index<422,the log is {command: {0 0 x 0 419 y 3807360812542972153}, Term: 1}
+2020/10/12 22:10:33 [3] discard logs that index<422,the log is {command: {0 0 x 0 419 y 3807360812542972153}, Term: 1}
+2020/10/12 22:10:33 [4] discard logs that index<422,the log is {command: {0 0 x 0 419 y 3807360812542972153}, Term: 1}
+2020/10/12 22:10:33 [0] discard logs that index<424,the log is {command: {0 0 x 0 421 y 1756041367393942791}, Term: 1}
+2020/10/12 22:10:33 [4] discard logs that index<491,the log is {command: {0 0 x 0 488 y 4299357378289250618}, Term: 1}
+2020/10/12 22:10:33 [2] discard logs that index<491,the log is {command: {0 0 x 0 488 y 4299357378289250618}, Term: 1}
+2020/10/12 22:10:33 [1] discard logs that index<491,the log is {command: {0 0 x 0 488 y 4299357378289250618}, Term: 1}
+2020/10/12 22:10:33 [3] discard logs that index<491,the log is {command: {0 0 x 0 488 y 4299357378289250618}, Term: 1}
+2020/10/12 22:10:33 [0] discard logs that index<494,the log is {command: {0 0 x 0 491 y 3251058630823731619}, Term: 1}
+2020/10/12 22:10:33 [4] discard logs that index<561,the log is {command: {0 0 x 0 558 y 2196141646872708192}, Term: 1}
+2020/10/12 22:10:33 [2] discard logs that index<561,the log is {command: {0 0 x 0 558 y 2196141646872708192}, Term: 1}
+2020/10/12 22:10:33 [1] discard logs that index<561,the log is {command: {0 0 x 0 558 y 2196141646872708192}, Term: 1}
+2020/10/12 22:10:33 [3] discard logs that index<561,the log is {command: {0 0 x 0 558 y 2196141646872708192}, Term: 1}
+2020/10/12 22:10:33 [0] discard logs that index<564,the log is {command: {0 0 x 0 561 y 4325549055091170147}, Term: 1}
+2020/10/12 22:10:33 [4] discard logs that index<631,the log is {command: {0 0 x 0 628 y 1674085066138848956}, Term: 1}
+2020/10/12 22:10:33 [3] discard logs that index<631,the log is {command: {0 0 x 0 628 y 1674085066138848956}, Term: 1}
+2020/10/12 22:10:33 [1] discard logs that index<631,the log is {command: {0 0 x 0 628 y 1674085066138848956}, Term: 1}
+2020/10/12 22:10:33 [2] discard logs that index<631,the log is {command: {0 0 x 0 628 y 1674085066138848956}, Term: 1}
+2020/10/12 22:10:33 [0] discard logs that index<634,the log is {command: {0 0 x 0 631 y 386434301907240810}, Term: 1}
+2020/10/12 22:10:33 [4] discard logs that index<700,the log is {command: {0 0 x 0 697 y 1190266700534586808}, Term: 1}
+2020/10/12 22:10:33 [1] discard logs that index<700,the log is {command: {0 0 x 0 697 y 1190266700534586808}, Term: 1}
+2020/10/12 22:10:33 [2] discard logs that index<700,the log is {command: {0 0 x 0 697 y 1190266700534586808}, Term: 1}
+2020/10/12 22:10:33 [3] discard logs that index<700,the log is {command: {0 0 x 0 697 y 1190266700534586808}, Term: 1}
+2020/10/12 22:10:33 [0] discard logs that index<704,the log is {command: {0 0 x 0 701 y 2771418182141589322}, Term: 1}
+2020/10/12 22:10:33 [4] discard logs that index<770,the log is {command: {0 0 x 0 767 y 980694866710077038}, Term: 1}
+2020/10/12 22:10:33 [2] discard logs that index<770,the log is {command: {0 0 x 0 767 y 980694866710077038}, Term: 1}
+2020/10/12 22:10:33 [3] discard logs that index<770,the log is {command: {0 0 x 0 767 y 980694866710077038}, Term: 1}
+2020/10/12 22:10:33 [1] discard logs that index<770,the log is {command: {0 0 x 0 767 y 980694866710077038}, Term: 1}
+2020/10/12 22:10:33 [0] discard logs that index<774,the log is {command: {0 0 x 0 771 y 2024025574656525485}, Term: 1}
+2020/10/12 22:10:34 [4] discard logs that index<840,the log is {command: {0 0 x 0 837 y 440558101282772004}, Term: 1}
+2020/10/12 22:10:34 [2] discard logs that index<840,the log is {command: {0 0 x 0 837 y 440558101282772004}, Term: 1}
+2020/10/12 22:10:34 [1] discard logs that index<840,the log is {command: {0 0 x 0 837 y 440558101282772004}, Term: 1}
+2020/10/12 22:10:34 [3] discard logs that index<840,the log is {command: {0 0 x 0 837 y 440558101282772004}, Term: 1}
+2020/10/12 22:10:34 [0] discard logs that index<844,the log is {command: {0 0 x 0 841 y 1348738970209997972}, Term: 1}
+2020/10/12 22:10:34 [4] discard logs that index<910,the log is {command: {0 0 x 0 907 y 4475997287024360253}, Term: 1}
+2020/10/12 22:10:34 [2] discard logs that index<910,the log is {command: {0 0 x 0 907 y 4475997287024360253}, Term: 1}
+2020/10/12 22:10:34 [1] discard logs that index<910,the log is {command: {0 0 x 0 907 y 4475997287024360253}, Term: 1}
+2020/10/12 22:10:34 [3] discard logs that index<910,the log is {command: {0 0 x 0 907 y 4475997287024360253}, Term: 1}
+2020/10/12 22:10:34 [0] discard logs that index<914,the log is {command: {0 0 x 0 911 y 1239424200157324051}, Term: 1}
+2020/10/12 22:10:34 [4] discard logs that index<980,the log is {command: {0 0 x 0 977 y 2047570301684560795}, Term: 1}
+2020/10/12 22:10:34 [1] discard logs that index<980,the log is {command: {0 0 x 0 977 y 2047570301684560795}, Term: 1}
+2020/10/12 22:10:34 [3] discard logs that index<980,the log is {command: {0 0 x 0 977 y 2047570301684560795}, Term: 1}
+2020/10/12 22:10:34 [2] discard logs that index<980,the log is {command: {0 0 x 0 977 y 2047570301684560795}, Term: 1}
+2020/10/12 22:10:34 [0] discard logs that index<984,the log is {command: {0 0 x 0 981 y 3651229808296961334}, Term: 1}
+2020/10/12 22:10:34 [1] discard logs that index<1049,the log is {command: {0 0 x 0 1046 y 2944463933593785011}, Term: 1}
+2020/10/12 22:10:34 [4] discard logs that index<1049,the log is {command: {0 0 x 0 1046 y 2944463933593785011}, Term: 1}
+2020/10/12 22:10:34 [2] discard logs that index<1049,the log is {command: {0 0 x 0 1046 y 2944463933593785011}, Term: 1}
+2020/10/12 22:10:34 [3] discard logs that index<1049,the log is {command: {0 0 x 0 1046 y 2944463933593785011}, Term: 1}
+2020/10/12 22:10:34 [0] discard logs that index<1054,the log is {command: {0 0 x 0 1051 y 2391196620328343404}, Term: 1}
+2020/10/12 22:10:34 [4] discard logs that index<1119,the log is {command: {0 0 x 0 1116 y 3769155008408870949}, Term: 1}
+2020/10/12 22:10:34 [1] discard logs that index<1119,the log is {command: {0 0 x 0 1116 y 3769155008408870949}, Term: 1}
+2020/10/12 22:10:34 [3] discard logs that index<1119,the log is {command: {0 0 x 0 1116 y 3769155008408870949}, Term: 1}
+2020/10/12 22:10:34 [2] discard logs that index<1119,the log is {command: {0 0 x 0 1116 y 3769155008408870949}, Term: 1}
+2020/10/12 22:10:34 [0] discard logs that index<1124,the log is {command: {0 0 x 0 1121 y 2215085264472627331}, Term: 1}
+2020/10/12 22:10:34 [4] discard logs that index<1189,the log is {command: {0 0 x 0 1186 y 1930775568320680432}, Term: 1}
+2020/10/12 22:10:34 [3] discard logs that index<1189,the log is {command: {0 0 x 0 1186 y 1930775568320680432}, Term: 1}
+2020/10/12 22:10:34 [1] discard logs that index<1189,the log is {command: {0 0 x 0 1186 y 1930775568320680432}, Term: 1}
+2020/10/12 22:10:34 [2] discard logs that index<1189,the log is {command: {0 0 x 0 1186 y 1930775568320680432}, Term: 1}
+2020/10/12 22:10:34 [0] discard logs that index<1194,the log is {command: {0 0 x 0 1191 y 737532001989685573}, Term: 1}
+2020/10/12 22:10:34 [4] discard logs that index<1259,the log is {command: {0 0 x 0 1256 y 4182408300824184641}, Term: 1}
+2020/10/12 22:10:34 [1] discard logs that index<1259,the log is {command: {0 0 x 0 1256 y 4182408300824184641}, Term: 1}
+2020/10/12 22:10:34 [2] discard logs that index<1259,the log is {command: {0 0 x 0 1256 y 4182408300824184641}, Term: 1}
+2020/10/12 22:10:34 [3] discard logs that index<1259,the log is {command: {0 0 x 0 1256 y 4182408300824184641}, Term: 1}
+2020/10/12 22:10:34 [0] discard logs that index<1264,the log is {command: {0 0 x 0 1261 y 4589731325055863723}, Term: 1}
+2020/10/12 22:10:34 [1] discard logs that index<1328,the log is {command: {0 0 x 0 1325 y 3044006701761155618}, Term: 1}
+2020/10/12 22:10:34 [3] discard logs that index<1328,the log is {command: {0 0 x 0 1325 y 3044006701761155618}, Term: 1}
+2020/10/12 22:10:34 [2] discard logs that index<1328,the log is {command: {0 0 x 0 1325 y 3044006701761155618}, Term: 1}
+2020/10/12 22:10:34 [0] discard logs that index<1334,the log is {command: {0 0 x 0 1331 y 476797446189205895}, Term: 1}
+2020/10/12 22:10:34 [1] discard logs that index<1397,the log is {command: {0 0 x 0 1394 y 477845170262204745}, Term: 1}
+2020/10/12 22:10:34 [3] discard logs that index<1397,the log is {command: {0 0 x 0 1394 y 477845170262204745}, Term: 1}
+2020/10/12 22:10:34 [2] discard logs that index<1397,the log is {command: {0 0 x 0 1394 y 477845170262204745}, Term: 1}
+2020/10/12 22:10:34 [0] discard logs that index<1404,the log is {command: {0 0 x 0 1401 y 1096205911923692985}, Term: 1}
+2020/10/12 22:10:34 [2] discard logs that index<1467,the log is {command: {0 0 x 0 1464 y 2775655647629920599}, Term: 1}
+2020/10/12 22:10:34 [1] discard logs that index<1467,the log is {command: {0 0 x 0 1464 y 2775655647629920599}, Term: 1}
+2020/10/12 22:10:34 [3] discard logs that index<1467,the log is {command: {0 0 x 0 1464 y 2775655647629920599}, Term: 1}
+2020/10/12 22:10:34 [0] discard logs that index<1474,the log is {command: {0 0 x 0 1471 y 1583409454557372738}, Term: 1}
+2020/10/12 22:10:35 [1] discard logs that index<1537,the log is {command: {0 0 x 0 1534 y 1599797035555515420}, Term: 1}
+2020/10/12 22:10:35 [3] discard logs that index<1537,the log is {command: {0 0 x 0 1534 y 1599797035555515420}, Term: 1}
+2020/10/12 22:10:35 [2] discard logs that index<1537,the log is {command: {0 0 x 0 1534 y 1599797035555515420}, Term: 1}
+2020/10/12 22:10:35 [0] discard logs that index<1544,the log is {command: {0 0 x 0 1541 y 3527610424585894669}, Term: 1}
+2020/10/12 22:10:35 [1] discard logs that index<1607,the log is {command: {0 0 x 0 1604 y 2247777905357386739}, Term: 1}
+2020/10/12 22:10:35 [3] discard logs that index<1607,the log is {command: {0 0 x 0 1604 y 2247777905357386739}, Term: 1}
+2020/10/12 22:10:35 [2] discard logs that index<1607,the log is {command: {0 0 x 0 1604 y 2247777905357386739}, Term: 1}
+2020/10/12 22:10:35 [0] discard logs that index<1614,the log is {command: {0 0 x 0 1611 y 735785498517616524}, Term: 1}
+2020/10/12 22:10:35 [3] discard logs that index<1676,the log is {command: {0 0 x 0 1673 y 4084101401921648907}, Term: 1}
+2020/10/12 22:10:35 [2] discard logs that index<1676,the log is {command: {0 0 x 0 1673 y 4084101401921648907}, Term: 1}
+2020/10/12 22:10:35 [1] discard logs that index<1676,the log is {command: {0 0 x 0 1673 y 4084101401921648907}, Term: 1}
+2020/10/12 22:10:35 [0] discard logs that index<1684,the log is {command: {0 0 x 0 1681 y 49569339412877422}, Term: 1}
+2020/10/12 22:10:35 [1] discard logs that index<1745,the log is {command: {0 0 x 0 1742 y 5640157191967439}, Term: 1}
+2020/10/12 22:10:35 [3] discard logs that index<1745,the log is {command: {0 0 x 0 1742 y 5640157191967439}, Term: 1}
+2020/10/12 22:10:35 [2] discard logs that index<1745,the log is {command: {0 0 x 0 1742 y 5640157191967439}, Term: 1}
+2020/10/12 22:10:35 [0] discard logs that index<1754,the log is {command: {0 0 x 0 1751 y 4259808515359741889}, Term: 1}
+2020/10/12 22:10:36 [1] discard logs that index<1814,the log is {command: {0 0 x 0 1811 y 1173246005116001683}, Term: 1}
+2020/10/12 22:10:36 [2] discard logs that index<1814,the log is {command: {0 0 x 0 1811 y 1173246005116001683}, Term: 1}
+2020/10/12 22:10:36 [3] discard logs that index<1814,the log is {command: {0 0 x 0 1811 y 1173246005116001683}, Term: 1}
+2020/10/12 22:10:36 [0] discard logs that index<1824,the log is {command: {0 0 x 0 1821 y 1859485276563393943}, Term: 1}
+2020/10/12 22:10:36 [1] discard logs that index<1884,the log is {command: {0 0 x 0 1881 y 4487431831336436665}, Term: 1}
+2020/10/12 22:10:36 [3] discard logs that index<1884,the log is {command: {0 0 x 0 1881 y 4487431831336436665}, Term: 1}
+2020/10/12 22:10:36 [2] discard logs that index<1884,the log is {command: {0 0 x 0 1881 y 4487431831336436665}, Term: 1}
+2020/10/12 22:10:36 [0] discard logs that index<1894,the log is {command: {0 0 x 0 1891 y 2188889682889173140}, Term: 1}
+2020/10/12 22:10:36 [2] discard logs that index<1954,the log is {command: {0 0 x 0 1951 y 423906042834364880}, Term: 1}
+2020/10/12 22:10:36 [3] discard logs that index<1954,the log is {command: {0 0 x 0 1951 y 423906042834364880}, Term: 1}
+2020/10/12 22:10:36 [1] discard logs that index<1954,the log is {command: {0 0 x 0 1951 y 423906042834364880}, Term: 1}
+2020/10/12 22:10:36 [0] discard logs that index<1964,the log is {command: {0 0 x 0 1961 y 3921820620758097355}, Term: 1}
+2020/10/12 22:10:36 [3] discard logs that index<2023,the log is {command: {0 0 x 0 2020 y 1681734439639264773}, Term: 1}
+2020/10/12 22:10:36 [1] discard logs that index<2023,the log is {command: {0 0 x 0 2020 y 1681734439639264773}, Term: 1}
+2020/10/12 22:10:36 [2] discard logs that index<2023,the log is {command: {0 0 x 0 2020 y 1681734439639264773}, Term: 1}
+2020/10/12 22:10:36 [0] discard logs that index<2034,the log is {command: {0 0 x 0 2031 y 2451035511813009522}, Term: 1}
+2020/10/12 22:10:36 [1] discard logs that index<2092,the log is {command: {0 0 x 0 2089 y 4151750120140843162}, Term: 1}
+2020/10/12 22:10:36 [2] discard logs that index<2092,the log is {command: {0 0 x 0 2089 y 4151750120140843162}, Term: 1}
+2020/10/12 22:10:36 [3] discard logs that index<2092,the log is {command: {0 0 x 0 2089 y 4151750120140843162}, Term: 1}
+2020/10/12 22:10:36 [0] discard logs that index<2104,the log is {command: {0 0 x 0 2101 y 2052401110284526974}, Term: 1}
+2020/10/12 22:10:36 [1] discard logs that index<2161,the log is {command: {0 0 x 0 2158 y 4551031663158481156}, Term: 1}
+2020/10/12 22:10:36 [2] discard logs that index<2161,the log is {command: {0 0 x 0 2158 y 4551031663158481156}, Term: 1}
+2020/10/12 22:10:36 [3] discard logs that index<2161,the log is {command: {0 0 x 0 2158 y 4551031663158481156}, Term: 1}
+2020/10/12 22:10:36 [0] discard logs that index<2174,the log is {command: {0 0 x 0 2171 y 537689661620043484}, Term: 1}
+2020/10/12 22:10:36 [1] discard logs that index<2230,the log is {command: {0 0 x 0 2227 y 3000319593724941917}, Term: 1}
+2020/10/12 22:10:36 [3] discard logs that index<2230,the log is {command: {0 0 x 0 2227 y 3000319593724941917}, Term: 1}
+2020/10/12 22:10:36 [2] discard logs that index<2230,the log is {command: {0 0 x 0 2227 y 3000319593724941917}, Term: 1}
+2020/10/12 22:10:36 [0] discard logs that index<2244,the log is {command: {0 0 x 0 2241 y 3855216569798969903}, Term: 1}
+2020/10/12 22:10:37 [1] discard logs that index<2300,the log is {command: {0 0 x 0 2297 y 4094321993664860340}, Term: 1}
+2020/10/12 22:10:37 [3] discard logs that index<2300,the log is {command: {0 0 x 0 2297 y 4094321993664860340}, Term: 1}
+2020/10/12 22:10:37 [2] discard logs that index<2300,the log is {command: {0 0 x 0 2297 y 4094321993664860340}, Term: 1}
+2020/10/12 22:10:37 [0] discard logs that index<2314,the log is {command: {0 0 x 0 2311 y 172831927647561891}, Term: 1}
+2020/10/12 22:10:37 [1] discard logs that index<2370,the log is {command: {0 0 x 0 2367 y 697383494822224489}, Term: 1}
+2020/10/12 22:10:37 [2] discard logs that index<2370,the log is {command: {0 0 x 0 2367 y 697383494822224489}, Term: 1}
+2020/10/12 22:10:37 [3] discard logs that index<2370,the log is {command: {0 0 x 0 2367 y 697383494822224489}, Term: 1}
+2020/10/12 22:10:37 [0] discard logs that index<2384,the log is {command: {0 0 x 0 2381 y 2992614427718173085}, Term: 1}
+2020/10/12 22:10:37 [1] discard logs that index<2440,the log is {command: {0 0 x 0 2437 y 1847659699486823257}, Term: 1}
+2020/10/12 22:10:37 [3] discard logs that index<2440,the log is {command: {0 0 x 0 2437 y 1847659699486823257}, Term: 1}
+2020/10/12 22:10:37 [2] discard logs that index<2440,the log is {command: {0 0 x 0 2437 y 1847659699486823257}, Term: 1}
+2020/10/12 22:10:37 [0] discard logs that index<2454,the log is {command: {0 0 x 0 2451 y 1418431225436885864}, Term: 1}
+2020/10/12 22:10:37 [1] discard logs that index<2509,the log is {command: {0 0 x 0 2506 y 2900947625368831588}, Term: 1}
+2020/10/12 22:10:37 [2] discard logs that index<2509,the log is {command: {0 0 x 0 2506 y 2900947625368831588}, Term: 1}
+2020/10/12 22:10:37 [3] discard logs that index<2509,the log is {command: {0 0 x 0 2506 y 2900947625368831588}, Term: 1}
+2020/10/12 22:10:37 [0] discard logs that index<2524,the log is {command: {0 0 x 0 2521 y 395618770182460581}, Term: 1}
+2020/10/12 22:10:37 [1] discard logs that index<2578,the log is {command: {0 0 x 0 2575 y 3311025522241203006}, Term: 1}
+2020/10/12 22:10:37 [2] discard logs that index<2578,the log is {command: {0 0 x 0 2575 y 3311025522241203006}, Term: 1}
+2020/10/12 22:10:37 [3] discard logs that index<2578,the log is {command: {0 0 x 0 2575 y 3311025522241203006}, Term: 1}
+2020/10/12 22:10:37 [0] discard logs that index<2594,the log is {command: {0 0 x 0 2591 y 2461998486029191822}, Term: 1}
+2020/10/12 22:10:37 shutdown servers
+
+
+
+restart servers
+
+
+2020/10/12 22:10:39 [2] converting to candidate, currentTerm=2, lastLogTerm=1,log.length=2634
+2020/10/12 22:10:39 [4] converting to follower, currentTerm=2, lastLogTerm=1,log.length=1331
+2020/10/12 22:10:39 [4] converting to follower, currentTerm=2, lastLogTerm=1,log.length=1331
+2020/10/12 22:10:39 [1] converting to follower, currentTerm=2, lastLogTerm=1,log.length=2634
+2020/10/12 22:10:39 [1] converting to follower, currentTerm=2, lastLogTerm=1,log.length=2634
+2020/10/12 22:10:39 [0] converting to follower, currentTerm=2, lastLogTerm=1,log.length=2634
+2020/10/12 22:10:39 [0] converting to follower, currentTerm=2, lastLogTerm=1,log.length=2634
+2020/10/12 22:10:39 [2] obtain vote from 4.
+2020/10/12 22:10:39 [3] converting to follower, currentTerm=2, lastLogTerm=1,log.length=2634
+2020/10/12 22:10:39 [3] converting to follower, currentTerm=2, lastLogTerm=1,log.length=2634
+2020/10/12 22:10:39 [2] obtain vote from 1.
+2020/10/12 22:10:39 [2] converting to leader, currentTerm=2, lastLogTerm=1,log.length=2634
+[4] lastIncludedIndex:2578，log.length:2579, commitIndex:2578
+--- FAIL: TestSnapshotRecover3B (6.52s)
+    test_test.go:86: 0 missing element x 0 0 y in Append result x 0 2576 yx 0 2577 yx 0 2578 yx 0 2579 yx 0 2580 yx 0 2581 yx 0 2582 yx 0 2583 yx 0 2584 yx 0 2585 yx 0 2586 yx 0 2587 yx 0 2588 yx 0 2589 yx 0 2590 yx 0 2591 yx 0 2592 yx 0 2593 yx 0 2594 yx 0 2595 yx 0 2596 yx 0 2597 yx 0 2598 yx 0 2599 yx 0 2600 yx 0 2601 yx 0 2602 yx 0 2603 yx 0 2604 yx 0 2605 yx 0 2606 yx 0 2607 yx 0 2608 yx 0 2609 yx 0 2610 yx 0 2611 yx 0 2612 yx 0 2613 yx 0 2614 yx 0 2615 yx 0 2616 yx 0 2617 yx 0 2618 yx 0 2619 yx 0 2620 yx 0 2621 yx 0 2622 yx 0 2623 yx 0 2624 yx 0 2625 yx 0 2626 yx 0 2627 yx 0 2628 yx 0 2629 yx 0 2630 y
+2020/10/12 22:10:39 Test: restarts, snapshots, many clients (3B) ...
+2020/10/12 22:10:39 [1] converting to candidate, currentTerm=1, lastLogTerm=0,log.length=1
+2020/10/12 22:10:39 [4] converting to follower, currentTerm=1, lastLogTerm=0,log.length=1
+2020/10/12 22:10:39 [2] converting to follower, currentTerm=1, lastLogTerm=0,log.length=1
+2020/10/12 22:10:39 [3] converting to follower, currentTerm=1, lastLogTerm=0,log.length=1
+2020/10/12 22:10:39 [0] converting to follower, currentTerm=1, lastLogTerm=0,log.length=1
+2020/10/12 22:10:39 [0] converting to follower, currentTerm=1, lastLogTerm=0,log.length=1
+2020/10/12 22:10:39 [2] converting to follower, currentTerm=1, lastLogTerm=0,log.length=1
+2020/10/12 22:10:39 [4] converting to follower, currentTerm=1, lastLogTerm=0,log.length=1
+2020/10/12 22:10:39 [3] converting to follower, currentTerm=1, lastLogTerm=0,log.length=1
+2020/10/12 22:10:39 [1] obtain vote from 0.
+2020/10/12 22:10:39 [1] obtain vote from 2.
+2020/10/12 22:10:39 [1] converting to leader, currentTerm=1, lastLogTerm=0,log.length=1
+2020/10/12 22:10:39 [3] discard logs that index<74,the log is {command: {0 6 x 6 5 y 4199324681985877368}, Term: 1}
+2020/10/12 22:10:39 [4] discard logs that index<74,the log is {command: {0 6 x 6 5 y 4199324681985877368}, Term: 1}
+2020/10/12 22:10:39 [0] discard logs that index<74,the log is {command: {0 6 x 6 5 y 4199324681985877368}, Term: 1}
+2020/10/12 22:10:39 [2] discard logs that index<74,the log is {command: {0 6 x 6 5 y 4199324681985877368}, Term: 1}
+2020/10/12 22:10:39 [1] discard logs that index<75,the log is {command: {0 4 x 4 4 y 284119749905243012}, Term: 1}
+2020/10/12 22:10:40 [4] discard logs that index<144,the log is {command: {0 5 x 5 4 y 3737721526841128012}, Term: 1}
+2020/10/12 22:10:40 [0] discard logs that index<144,the log is {command: {0 5 x 5 4 y 3737721526841128012}, Term: 1}
+2020/10/12 22:10:40 [3] discard logs that index<144,the log is {command: {0 5 x 5 4 y 3737721526841128012}, Term: 1}
+2020/10/12 22:10:40 [2] discard logs that index<144,the log is {command: {0 5 x 5 4 y 3737721526841128012}, Term: 1}
+2020/10/12 22:10:40 [1] discard logs that index<146,the log is {command: {0 17 x 17 3 y 3388975607296390808}, Term: 1}
+2020/10/12 22:10:40 [4] discard logs that index<215,the log is {command: {0 2 x 2 69 y 1025212296292900125}, Term: 1}
+2020/10/12 22:10:40 [0] discard logs that index<215,the log is {command: {0 2 x 2 69 y 1025212296292900125}, Term: 1}
+2020/10/12 22:10:40 [3] discard logs that index<215,the log is {command: {0 2 x 2 69 y 1025212296292900125}, Term: 1}
+2020/10/12 22:10:40 [2] discard logs that index<215,the log is {command: {0 2 x 2 69 y 1025212296292900125}, Term: 1}
+2020/10/12 22:10:40 [1] discard logs that index<217,the log is {command: {0 2 x 2 71 y 1057300207890014120}, Term: 1}
+2020/10/12 22:10:40 [2] discard logs that index<285,the log is {command: {0 9 x 9 5 y 2566199645088248365}, Term: 1}
+2020/10/12 22:10:40 [0] discard logs that index<285,the log is {command: {0 9 x 9 5 y 2566199645088248365}, Term: 1}
+2020/10/12 22:10:40 [3] discard logs that index<285,the log is {command: {0 9 x 9 5 y 2566199645088248365}, Term: 1}
+2020/10/12 22:10:40 [4] discard logs that index<286,the log is {command: {0 2 x 2 130 y 302923323682134011}, Term: 1}
+2020/10/12 22:10:40 [1] discard logs that index<288,the log is {command: {0 9 x 9 6 y 1671314794907724232}, Term: 1}
+[4] lastIncludedIndex:288，log.length:289, commitIndex:288
+2020/10/12 22:10:40 [2] discard logs that index<355,the log is {command: {0 11 x 11 9 y 357907353496785079}, Term: 1}
+2020/10/12 22:10:40 [3] discard logs that index<355,the log is {command: {0 11 x 11 9 y 357907353496785079}, Term: 1}
+2020/10/12 22:10:40 [0] discard logs that index<355,the log is {command: {0 11 x 11 9 y 357907353496785079}, Term: 1}
+2020/10/12 22:10:40 [1] discard logs that index<359,the log is {command: {0 12 x 12 6 y 114730886671050640}, Term: 1}
+2020/10/12 22:10:40 [4] discard logs that index<359,the log is {command: {0 12 x 12 6 y 114730886671050640}, Term: 1}
+2020/10/12 22:10:40 [2] discard logs that index<425,the log is {command: {0 0 x 0 40 y 4492801312236523787}, Term: 1}
+2020/10/12 22:10:40 [0] discard logs that index<425,the log is {command: {0 0 x 0 40 y 4492801312236523787}, Term: 1}
+2020/10/12 22:10:40 [3] discard logs that index<425,the log is {command: {0 0 x 0 40 y 4492801312236523787}, Term: 1}
+2020/10/12 22:10:40 [4] discard logs that index<429,the log is {command: {0 0 x 0 42 y 1374947169943984993}, Term: 1}
+2020/10/12 22:10:40 [1] discard logs that index<430,the log is {command: {0 14 x 14 37 y 3124606198248142497}, Term: 1}
+[3] lastIncludedIndex:430，log.length:431, commitIndex:430
+2020/10/12 22:10:40 [2] discard logs that index<495,the log is {command: {0 9 x 9 19 y 3405264274120109651}, Term: 1}
+2020/10/12 22:10:40 [0] discard logs that index<495,the log is {command: {0 9 x 9 19 y 3405264274120109651}, Term: 1}
+2020/10/12 22:10:40 [4] discard logs that index<498,the log is {command: {0 13 x 13 22 y 4381542892177203692}, Term: 1}
+2020/10/12 22:10:40 [1] discard logs that index<500,the log is {command: {0 13 x 13 23 y 1869352467660521944}, Term: 1}
+2020/10/12 22:10:40 [3] discard logs that index<500,the log is {command: {0 13 x 13 23 y 1869352467660521944}, Term: 1}
+2020/10/12 22:10:40 [0] discard logs that index<565,the log is {command: {0 13 x 13 70 y 1670647766428180409}, Term: 1}
+2020/10/12 22:10:40 [2] discard logs that index<565,the log is {command: {0 13 x 13 70 y 1670647766428180409}, Term: 1}
+2020/10/12 22:10:40 [4] discard logs that index<567,the log is {command: {0 13 x 13 71 y 770996408491913459}, Term: 1}
+2020/10/12 22:10:40 [1] discard logs that index<570,the log is {command: {0 13 x 13 73 y 1689736814704697456}, Term: 1}
+2020/10/12 22:10:40 [3] discard logs that index<569,the log is {command: {0 13 x 13 72 y 1744551658014861355}, Term: 1}
+2020/10/12 22:10:40 [0] discard logs that index<634,the log is {command: {0 13 x 13 91 y 1151634273143927963}, Term: 1}
+2020/10/12 22:10:40 [2] discard logs that index<634,the log is {command: {0 13 x 13 91 y 1151634273143927963}, Term: 1}
+2020/10/12 22:10:40 [4] discard logs that index<636,the log is {command: {0 12 x 12 21 y 3122971044963451307}, Term: 1}
+2020/10/12 22:10:40 [1] discard logs that index<640,the log is {command: {0 1 x 1 17 y 2457742303297922627}, Term: 1}
+2020/10/12 22:10:40 [3] discard logs that index<639,the log is {command: {0 12 x 12 22 y 4114612210570831714}, Term: 1}
+[4] lastIncludedIndex:640，log.length:641, commitIndex:640
+2020/10/12 22:10:40 [2] discard logs that index<703,the log is {command: {0 9 x 9 62 y 716561285234485157}, Term: 1}
+2020/10/12 22:10:40 [0] discard logs that index<703,the log is {command: {0 9 x 9 62 y 716561285234485157}, Term: 1}
+2020/10/12 22:10:40 [3] discard logs that index<708,the log is {command: {0 15 x 15 6 y 2358419019521825108}, Term: 1}
+2020/10/12 22:10:40 [1] discard logs that index<710,the log is {command: {0 15 x 15 7 y 1442483686359821576}, Term: 1}
+2020/10/12 22:10:40 [4] discard logs that index<710,the log is {command: {0 15 x 15 7 y 1442483686359821576}, Term: 1}
+2020/10/12 22:10:40 [0] discard logs that index<773,the log is {command: {0 11 x 11 24 y 2520679375817621513}, Term: 1}
+2020/10/12 22:10:40 [2] discard logs that index<773,the log is {command: {0 11 x 11 24 y 2520679375817621513}, Term: 1}
+2020/10/12 22:10:40 [3] discard logs that index<778,the log is {command: {0 10 x 10 13 y 587195900492940300}, Term: 1}
+2020/10/12 22:10:40 [1] discard logs that index<781,the log is {command: {0 1 x 1 19 y 1985029583762052913}, Term: 1}
+2020/10/12 22:10:40 [4] discard logs that index<780,the log is {command: {0 14 x 14 57 y 4179413588424234430}, Term: 1}
+2020/10/12 22:10:40 [0] discard logs that index<842,the log is {command: {0 12 x 12 44 y 524720471637006878}, Term: 1}
+2020/10/12 22:10:40 [3] discard logs that index<847,the log is {command: {0 13 x 13 117 y 693697364930368480}, Term: 1}
+2020/10/12 22:10:40 [4] discard logs that index<850,the log is {command: {0 16 x 16 10 y 4498857629519585367}, Term: 1}
+2020/10/12 22:10:40 [1] discard logs that index<851,the log is {command: {0 16 x 16 11 y 3376485273826900728}, Term: 1}
+2020/10/12 22:10:40 [0] discard logs that index<912,the log is {command: {0 12 x 12 55 y 300561516652243504}, Term: 1}
+2020/10/12 22:10:40 [3] discard logs that index<916,the log is {command: {0 4 x 4 41 y 161564056214665366}, Term: 1}
+2020/10/12 22:10:40 [4] discard logs that index<919,the log is {command: {0 4 x 4 43 y 1671063304791916288}, Term: 1}
+2020/10/12 22:10:40 [1] discard logs that index<921,the log is {command: {0 4 x 4 44 y 1656572456444860365}, Term: 1}
+2020/10/12 22:10:40 [0] discard logs that index<982,the log is {command: {0 14 x 14 103 y 3947886172235726471}, Term: 1}
+2020/10/12 22:10:40 [3] discard logs that index<986,the log is {command: {0 14 x 14 107 y 25624906243815790}, Term: 1}
+2020/10/12 22:10:40 [4] discard logs that index<989,the log is {command: {0 14 x 14 110 y 4574162911772303126}, Term: 1}
+2020/10/12 22:10:40 [1] discard logs that index<991,the log is {command: {0 14 x 14 112 y 1875478248411521832}, Term: 1}
+2020/10/12 22:10:40 [0] discard logs that index<1052,the log is {command: {0 6 x 6 62 y 4128846653013289010}, Term: 1}
+2020/10/12 22:10:40 [3] discard logs that index<1056,the log is {command: {0 6 x 6 63 y 1010819696833024966}, Term: 1}
+2020/10/12 22:10:40 [4] discard logs that index<1059,the log is {command: {0 6 x 6 64 y 2236319732716463314}, Term: 1}
+2020/10/12 22:10:40 [1] discard logs that index<1062,the log is {command: {0 6 x 6 66 y 2158643792847291723}, Term: 1}
+2020/10/12 22:10:40 [0] discard logs that index<1122,the log is {command: {0 14 x 14 131 y 3135177501733341004}, Term: 1}
+2020/10/12 22:10:40 [3] discard logs that index<1126,the log is {command: {0 14 x 14 132 y 2057593133317499030}, Term: 1}
+2020/10/12 22:10:40 [4] discard logs that index<1128,the log is {command: {0 14 x 14 133 y 3250621447795921699}, Term: 1}
+2020/10/12 22:10:40 [1] discard logs that index<1132,the log is {command: {0 0 x 0 73 y 488218432812638706}, Term: 1}
+2020/10/12 22:10:40 [0] discard logs that index<1192,the log is {command: {0 14 x 14 167 y 3368732208627133157}, Term: 1}
+2020/10/12 22:10:40 [3] discard logs that index<1195,the log is {command: {0 14 x 14 170 y 76251861400260376}, Term: 1}
+2020/10/12 22:10:40 [4] discard logs that index<1198,the log is {command: {0 14 x 14 173 y 3619883661804786325}, Term: 1}
+2020/10/12 22:10:40 [1] discard logs that index<1202,the log is {command: {0 2 x 2 175 y 2548527350043729787}, Term: 1}
+2020/10/12 22:10:41 [0] discard logs that index<1261,the log is {command: {0 3 x 3 15 y 3039092518721551801}, Term: 1}
+2020/10/12 22:10:41 [3] discard logs that index<1265,the log is {command: {0 17 x 17 35 y 2874003173410017374}, Term: 1}
+2020/10/12 22:10:41 [4] discard logs that index<1268,the log is {command: {0 4 x 4 59 y 2724847938026187763}, Term: 1}
+2020/10/12 22:10:41 [1] discard logs that index<1272,the log is {command: {0 13 x 13 123 y 1352268120051827212}, Term: 1}
+[4] lastIncludedIndex:1272，log.length:1273, commitIndex:1272
+2020/10/12 22:10:41 [0] discard logs that index<1331,the log is {command: {0 15 x 15 25 y 1087558607501746677}, Term: 1}
+2020/10/12 22:10:41 [3] discard logs that index<1334,the log is {command: {0 15 x 15 27 y 2717382396440859645}, Term: 1}
+2020/10/12 22:10:41 [1] discard logs that index<1342,the log is {command: {0 15 x 15 35 y 1068218815978904496}, Term: 1}
+2020/10/12 22:10:41 [4] discard logs that index<1343,the log is {command: {0 15 x 15 36 y 2441341943368572372}, Term: 1}
+2020/10/12 22:10:41 [0] discard logs that index<1401,the log is {command: {0 1 x 1 42 y 2078394986886927188}, Term: 1}
+2020/10/12 22:10:41 [3] discard logs that index<1403,the log is {command: {0 15 x 15 66 y 861320259451658535}, Term: 1}
+2020/10/12 22:10:41 [1] discard logs that index<1412,the log is {command: {0 15 x 15 69 y 241551968053855757}, Term: 1}
+2020/10/12 22:10:41 [4] discard logs that index<1413,the log is {command: {0 15 x 15 70 y 3513213144860974771}, Term: 1}
+2020/10/12 22:10:41 [0] discard logs that index<1471,the log is {command: {0 1 x 1 63 y 1877185603529582130}, Term: 1}
+2020/10/12 22:10:41 [3] discard logs that index<1473,the log is {command: {0 1 x 1 64 y 2456097675483835073}, Term: 1}
+2020/10/12 22:10:41 [1] discard logs that index<1482,the log is {command: {0 5 x 5 43 y 268350088967651286}, Term: 1}
+2020/10/12 22:10:41 [4] discard logs that index<1482,the log is {command: {0 5 x 5 43 y 268350088967651286}, Term: 1}
+2020/10/12 22:10:41 [0] discard logs that index<1540,the log is {command: {0 15 x 15 75 y 2587337443163332071}, Term: 1}
+2020/10/12 22:10:41 [3] discard logs that index<1542,the log is {command: {0 15 x 15 77 y 2942655665117699938}, Term: 1}
+2020/10/12 22:10:41 [1] discard logs that index<1552,the log is {command: {0 14 x 14 197 y 3184292289428822842}, Term: 1}
+2020/10/12 22:10:41 [4] discard logs that index<1552,the log is {command: {0 14 x 14 197 y 3184292289428822842}, Term: 1}
+2020/10/12 22:10:41 [0] discard logs that index<1609,the log is {command: {0 4 x 4 73 y 1909893660820777135}, Term: 1}
+2020/10/12 22:10:41 [3] discard logs that index<1612,the log is {command: {0 4 x 4 76 y 1607788287010383906}, Term: 1}
+2020/10/12 22:10:41 [1] discard logs that index<1622,the log is {command: {0 4 x 4 83 y 1625879947298746851}, Term: 1}
+2020/10/12 22:10:41 [4] discard logs that index<1622,the log is {command: {0 4 x 4 83 y 1625879947298746851}, Term: 1}
+2020/10/12 22:10:41 [0] discard logs that index<1680,the log is {command: {0 1 x 1 76 y 3309333003727593566}, Term: 1}
+2020/10/12 22:10:41 [3] discard logs that index<1683,the log is {command: {0 1 x 1 79 y 2368299112167685728}, Term: 1}
+2020/10/12 22:10:41 [1] discard logs that index<1693,the log is {command: {0 5 x 5 61 y 2973923066344029897}, Term: 1}
+2020/10/12 22:10:41 [4] discard logs that index<1693,the log is {command: {0 5 x 5 61 y 2973923066344029897}, Term: 1}
+[0] lastIncludedIndex:1693，log.length:1694, commitIndex:1693
+2020/10/12 22:10:41 [3] discard logs that index<1752,the log is {command: {0 3 x 3 44 y 2968286059162909350}, Term: 1}
+2020/10/12 22:10:41 [1] discard logs that index<1763,the log is {command: {0 3 x 3 46 y 4102933720315374831}, Term: 1}
+2020/10/12 22:10:41 [4] discard logs that index<1762,the log is {command: {0 16 x 16 56 y 597597642950608299}, Term: 1}
+2020/10/12 22:10:41 [0] discard logs that index<1763,the log is {command: {0 3 x 3 46 y 4102933720315374831}, Term: 1}
+2020/10/12 22:10:41 [3] discard logs that index<1821,the log is {command: {0 14 x 14 239 y 1867404544976581214}, Term: 1}
+2020/10/12 22:10:41 [4] discard logs that index<1832,the log is {command: {0 2 x 2 229 y 2025125940593789363}, Term: 1}
+2020/10/12 22:10:41 [1] discard logs that index<1833,the log is {command: {0 2 x 2 230 y 745375151727011325}, Term: 1}
+2020/10/12 22:10:41 [0] discard logs that index<1833,the log is {command: {0 2 x 2 230 y 745375151727011325}, Term: 1}
+2020/10/12 22:10:41 [3] discard logs that index<1890,the log is {command: {0 5 x 5 105 y 1147672482766584909}, Term: 1}
+2020/10/12 22:10:41 [4] discard logs that index<1901,the log is {command: {0 11 x 11 76 y 1989402286544377339}, Term: 1}
+2020/10/12 22:10:41 [0] discard logs that index<1902,the log is {command: {0 5 x 5 112 y 2341807836370821802}, Term: 1}
+2020/10/12 22:10:41 [1] discard logs that index<1903,the log is {command: {0 11 x 11 77 y 4510928837770660764}, Term: 1}
+2020/10/12 22:10:41 [3] discard logs that index<1959,the log is {command: {0 3 x 3 58 y 4555072887414288046}, Term: 1}
+2020/10/12 22:10:41 [4] discard logs that index<1970,the log is {command: {0 7 x 7 76 y 2065898956082824053}, Term: 1}
+2020/10/12 22:10:41 [0] discard logs that index<1971,the log is {command: {0 7 x 7 77 y 3917926583338030920}, Term: 1}
+2020/10/12 22:10:41 [1] discard logs that index<1973,the log is {command: {0 7 x 7 79 y 2781300058153719152}, Term: 1}
+2020/10/12 22:10:41 [3] discard logs that index<2028,the log is {command: {0 5 x 5 132 y 460218782137568643}, Term: 1}
+2020/10/12 22:10:41 [4] discard logs that index<2039,the log is {command: {0 5 x 5 142 y 4064924834372379624}, Term: 1}
+2020/10/12 22:10:41 [0] discard logs that index<2040,the log is {command: {0 5 x 5 143 y 3724350156479491642}, Term: 1}
+2020/10/12 22:10:41 [1] discard logs that index<2043,the log is {command: {0 5 x 5 146 y 2420923848790742380}, Term: 1}
+2020/10/12 22:10:41 [3] discard logs that index<2098,the log is {command: {0 10 x 10 67 y 627074912893764241}, Term: 1}
+2020/10/12 22:10:41 [4] discard logs that index<2108,the log is {command: {0 6 x 6 112 y 3066026904723748607}, Term: 1}
+2020/10/12 22:10:41 [0] discard logs that index<2110,the log is {command: {0 10 x 10 73 y 977446194819855011}, Term: 1}
+2020/10/12 22:10:41 [1] discard logs that index<2113,the log is {command: {0 14 x 14 252 y 2702359637011683355}, Term: 1}
+2020/10/12 22:10:42 [3] discard logs that index<2167,the log is {command: {0 0 x 0 104 y 4431622908664968032}, Term: 1}
+2020/10/12 22:10:42 [4] discard logs that index<2177,the log is {command: {0 9 x 9 87 y 4429374456637378847}, Term: 1}
+2020/10/12 22:10:42 [0] discard logs that index<2180,the log is {command: {0 4 x 4 108 y 1362200855997276681}, Term: 1}
+2020/10/12 22:10:42 [1] discard logs that index<2183,the log is {command: {0 3 x 3 65 y 4424215834509868600}, Term: 1}
+2020/10/12 22:10:42 [3] discard logs that index<2237,the log is {command: {0 16 x 16 72 y 1137028678261746132}, Term: 1}
+2020/10/12 22:10:42 [4] discard logs that index<2246,the log is {command: {0 2 x 2 249 y 713112293072834677}, Term: 1}
+2020/10/12 22:10:42 [0] discard logs that index<2250,the log is {command: {0 18 x 18 44 y 12069859340485502}, Term: 1}
+2020/10/12 22:10:42 [1] discard logs that index<2253,the log is {command: {0 18 x 18 46 y 89398244120717379}, Term: 1}
+2020/10/12 22:10:42 [3] discard logs that index<2307,the log is {command: {0 3 x 3 72 y 2282671459184766817}, Term: 1}
+2020/10/12 22:10:42 [4] discard logs that index<2316,the log is {command: {0 12 x 12 100 y 2540935769393317745}, Term: 1}
+2020/10/12 22:10:42 [0] discard logs that index<2320,the log is {command: {0 12 x 12 102 y 2733061382018008196}, Term: 1}
+2020/10/12 22:10:42 [1] discard logs that index<2323,the log is {command: {0 13 x 13 154 y 1937090829728930225}, Term: 1}
+[4] lastIncludedIndex:2323，log.length:2324, commitIndex:2323
+2020/10/12 22:10:42 [3] discard logs that index<2375,the log is {command: {0 13 x 13 170 y 956416370362597131}, Term: 1}
+2020/10/12 22:10:42 [0] discard logs that index<2388,the log is {command: {0 12 x 12 131 y 3012849965039401759}, Term: 1}
+2020/10/12 22:10:42 [1] discard logs that index<2392,the log is {command: {0 17 x 17 63 y 3154463232782886051}, Term: 1}
+2020/10/12 22:10:42 [4] discard logs that index<2392,the log is {command: {0 17 x 17 63 y 3154463232782886051}, Term: 1}
+2020/10/12 22:10:42 [3] discard logs that index<2444,the log is {command: {0 3 x 3 91 y 2753719662229081674}, Term: 1}
+2020/10/12 22:10:42 [0] discard logs that index<2457,the log is {command: {0 15 x 15 83 y 3447080999026927967}, Term: 1}
+2020/10/12 22:10:42 [4] discard logs that index<2461,the log is {command: {0 15 x 15 86 y 1838161373765007621}, Term: 1}
+2020/10/12 22:10:42 [1] discard logs that index<2462,the log is {command: {0 3 x 3 103 y 1044552375162122501}, Term: 1}
+2020/10/12 22:10:42 [3] discard logs that index<2513,the log is {command: {0 15 x 15 100 y 1672367104935757880}, Term: 1}
+2020/10/12 22:10:42 [0] discard logs that index<2527,the log is {command: {0 15 x 15 102 y 3081665825526695094}, Term: 1}
+2020/10/12 22:10:42 [4] discard logs that index<2530,the log is {command: {0 16 x 16 83 y 3581442208308526678}, Term: 1}
+2020/10/12 22:10:42 [1] discard logs that index<2532,the log is {command: {0 10 x 10 96 y 3344654404225346291}, Term: 1}
+2020/10/12 22:10:42 [3] discard logs that index<2582,the log is {command: {0 1 x 1 108 y 1863871941267018690}, Term: 1}
+2020/10/12 22:10:42 [0] discard logs that index<2596,the log is {command: {0 17 x 17 77 y 46504759481133641}, Term: 1}
+2020/10/12 22:10:42 [4] discard logs that index<2599,the log is {command: {0 2 x 2 254 y 882240931042929786}, Term: 1}
+2020/10/12 22:10:42 [1] discard logs that index<2602,the log is {command: {0 2 x 2 255 y 4574630689279441862}, Term: 1}
+2020/10/12 22:10:42 [3] discard logs that index<2651,the log is {command: {0 17 x 17 103 y 1277041562993878370}, Term: 1}
+2020/10/12 22:10:42 [0] discard logs that index<2665,the log is {command: {0 19 x 19 110 y 4219745638387966596}, Term: 1}
+2020/10/12 22:10:42 [4] discard logs that index<2668,the log is {command: {0 19 x 19 111 y 1065424369495214875}, Term: 1}
+2020/10/12 22:10:42 [1] discard logs that index<2671,the log is {command: {0 12 x 12 147 y 1270818634685209825}, Term: 1}
+2020/10/12 22:10:42 [3] discard logs that index<2719,the log is {command: {0 11 x 11 115 y 4053616158706175284}, Term: 1}
+2020/10/12 22:10:42 [0] discard logs that index<2733,the log is {command: {0 13 x 13 176 y 1919101158055144936}, Term: 1}
+2020/10/12 22:10:42 [4] discard logs that index<2737,the log is {command: {0 13 x 13 179 y 3460878484400056757}, Term: 1}
+2020/10/12 22:10:42 [1] discard logs that index<2740,the log is {command: {0 10 x 10 124 y 1414497626160202904}, Term: 1}
+2020/10/12 22:10:42 [3] discard logs that index<2787,the log is {command: {0 8 x 8 82 y 4146014850580708683}, Term: 1}
+2020/10/12 22:10:42 [0] discard logs that index<2803,the log is {command: {0 7 x 7 115 y 535768049270269820}, Term: 1}
+2020/10/12 22:10:42 [4] discard logs that index<2807,the log is {command: {0 7 x 7 117 y 4084834112252164562}, Term: 1}
+2020/10/12 22:10:42 [1] discard logs that index<2810,the log is {command: {0 11 x 11 118 y 2445180565994588575}, Term: 1}
+[4] lastIncludedIndex:2810，log.length:2811, commitIndex:2810
+2020/10/12 22:10:42 [3] discard logs that index<2856,the log is {command: {0 10 x 10 141 y 2266007985108453491}, Term: 1}
+2020/10/12 22:10:42 [0] discard logs that index<2872,the log is {command: {0 18 x 18 73 y 3436568251503151299}, Term: 1}
+2020/10/12 22:10:42 [1] discard logs that index<2879,the log is {command: {0 14 x 14 271 y 1180796583146946353}, Term: 1}
+[3] lastIncludedIndex:2879，log.length:2880, commitIndex:2879
+2020/10/12 22:10:42 [4] discard logs that index<2880,the log is {command: {0 15 x 15 125 y 2334382046690322787}, Term: 1}
+2020/10/12 22:10:43 [0] discard logs that index<2940,the log is {command: {0 18 x 18 89 y 3556618499814540029}, Term: 1}
+2020/10/12 22:10:43 [1] discard logs that index<2948,the log is {command: {0 15 x 15 127 y 2435009841951615024}, Term: 1}
+2020/10/12 22:10:43 [3] discard logs that index<2948,the log is {command: {0 15 x 15 127 y 2435009841951615024}, Term: 1}
+2020/10/12 22:10:43 [0] discard logs that index<3008,the log is {command: {0 15 x 15 157 y 4296012339704036608}, Term: 1}
+2020/10/12 22:10:43 [3] discard logs that index<3016,the log is {command: {0 16 x 16 103 y 3252776957040931421}, Term: 1}
+2020/10/12 22:10:43 [1] discard logs that index<3017,the log is {command: {0 6 x 6 145 y 289643981697587057}, Term: 1}
+2020/10/12 22:10:43 [0] discard logs that index<3078,the log is {command: {0 15 x 15 166 y 1081184835738560686}, Term: 1}
+2020/10/12 22:10:43 [3] discard logs that index<3085,the log is {command: {0 15 x 15 172 y 2938682165545659338}, Term: 1}
+2020/10/12 22:10:43 [1] discard logs that index<3087,the log is {command: {0 15 x 15 174 y 1780542891836947631}, Term: 1}
+2020/10/12 22:10:43 [0] discard logs that index<3148,the log is {command: {0 17 x 17 174 y 1670976684091782066}, Term: 1}
+2020/10/12 22:10:43 [3] discard logs that index<3154,the log is {command: {0 17 x 17 180 y 473991542844220271}, Term: 1}
+2020/10/12 22:10:43 [1] discard logs that index<3157,the log is {command: {0 17 x 17 183 y 3609965683480969873}, Term: 1}
+2020/10/12 22:10:43 [0] discard logs that index<3216,the log is {command: {0 18 x 18 103 y 1158290536925338600}, Term: 1}
+2020/10/12 22:10:43 [3] discard logs that index<3223,the log is {command: {0 10 x 10 156 y 349087933147566862}, Term: 1}
+2020/10/12 22:10:43 [1] discard logs that index<3226,the log is {command: {0 10 x 10 157 y 3474290148046226755}, Term: 1}
+2020/10/12 22:10:43 [0] discard logs that index<3285,the log is {command: {0 10 x 10 172 y 2004652200939660804}, Term: 1}
+2020/10/12 22:10:43 [3] discard logs that index<3292,the log is {command: {0 14 x 14 293 y 2998317137804567293}, Term: 1}
+2020/10/12 22:10:43 [1] discard logs that index<3295,the log is {command: {0 9 x 9 172 y 2736194690533045899}, Term: 1}
+2020/10/12 22:10:43 [0] discard logs that index<3355,the log is {command: {0 8 x 8 106 y 1186781802250785733}, Term: 1}
+2020/10/12 22:10:43 [3] discard logs that index<3362,the log is {command: {0 10 x 10 200 y 619391796034817146}, Term: 1}
+2020/10/12 22:10:43 [1] discard logs that index<3365,the log is {command: {0 7 x 7 176 y 2702926968285200541}, Term: 1}
+2020/10/12 22:10:43 [0] discard logs that index<3425,the log is {command: {0 0 x 0 145 y 3613326215196110199}, Term: 1}
+2020/10/12 22:10:43 [3] discard logs that index<3432,the log is {command: {0 5 x 5 204 y 385495711065412168}, Term: 1}
+2020/10/12 22:10:43 [1] discard logs that index<3435,the log is {command: {0 19 x 19 147 y 1657833507295248219}, Term: 1}
+2020/10/12 22:10:43 [0] discard logs that index<3494,the log is {command: {0 9 x 9 184 y 1993855670778047393}, Term: 1}
+2020/10/12 22:10:43 [3] discard logs that index<3500,the log is {command: {0 3 x 3 135 y 1047202592362304502}, Term: 1}
+2020/10/12 22:10:43 [1] discard logs that index<3504,the log is {command: {0 3 x 3 136 y 751951496060695827}, Term: 1}
+2020/10/12 22:10:43 [0] discard logs that index<3563,the log is {command: {0 18 x 18 117 y 3978494095135626721}, Term: 1}
+2020/10/12 22:10:43 [3] discard logs that index<3569,the log is {command: {0 15 x 15 178 y 19481404438629479}, Term: 1}
+2020/10/12 22:10:43 [1] discard logs that index<3574,the log is {command: {0 1 x 1 136 y 2934947795751216485}, Term: 1}
+2020/10/12 22:10:43 [0] discard logs that index<3633,the log is {command: {0 2 x 2 277 y 4003766521993813727}, Term: 1}
+2020/10/12 22:10:43 [3] discard logs that index<3639,the log is {command: {0 2 x 2 283 y 3923024493455921160}, Term: 1}
+2020/10/12 22:10:43 [1] discard logs that index<3644,the log is {command: {0 2 x 2 288 y 3257299251413418611}, Term: 1}
+2020/10/12 22:10:44 [0] discard logs that index<3702,the log is {command: {0 16 x 16 137 y 2724688555467965574}, Term: 1}
+2020/10/12 22:10:44 [3] discard logs that index<3707,the log is {command: {0 3 x 3 151 y 4222896996992325410}, Term: 1}
+2020/10/12 22:10:44 [1] discard logs that index<3713,the log is {command: {0 7 x 7 189 y 1728648507971392724}, Term: 1}
+2020/10/12 22:10:44 [0] discard logs that index<3771,the log is {command: {0 11 x 11 145 y 2035670122406175502}, Term: 1}
+2020/10/12 22:10:44 [3] discard logs that index<3776,the log is {command: {0 11 x 11 150 y 2311665251003121466}, Term: 1}
+2020/10/12 22:10:44 [1] discard logs that index<3782,the log is {command: {0 11 x 11 156 y 387501993940506925}, Term: 1}
+2020/10/12 22:10:44 [0] discard logs that index<3840,the log is {command: {0 12 x 12 187 y 2175005881714247466}, Term: 1}
+2020/10/12 22:10:44 [3] discard logs that index<3846,the log is {command: {0 13 x 13 230 y 2674090227453833781}, Term: 1}
+2020/10/12 22:10:44 [1] discard logs that index<3852,the log is {command: {0 0 x 0 174 y 977667705692783051}, Term: 1}
+2020/10/12 22:10:44 [0] discard logs that index<3908,the log is {command: {0 9 x 9 205 y 1004771190838348528}, Term: 1}
+2020/10/12 22:10:44 [3] discard logs that index<3915,the log is {command: {0 7 x 7 209 y 1292627533554646354}, Term: 1}
+2020/10/12 22:10:44 [1] discard logs that index<3921,the log is {command: {0 7 x 7 210 y 4404311966914438336}, Term: 1}
+2020/10/12 22:10:44 shutdown servers
+
+
+
+restart servers
+
+
+2020/10/12 22:10:45 [0] converting to candidate, currentTerm=2, lastLogTerm=1,log.length=3941
+2020/10/12 22:10:45 [4] converting to follower, currentTerm=2, lastLogTerm=1,log.length=2950
+2020/10/12 22:10:45 [4] converting to follower, currentTerm=2, lastLogTerm=1,log.length=2950
+2020/10/12 22:10:45 [3] converting to follower, currentTerm=2, lastLogTerm=1,log.length=3941
+2020/10/12 22:10:45 [2] converting to follower, currentTerm=2, lastLogTerm=1,log.length=844
+2020/10/12 22:10:45 [2] converting to follower, currentTerm=2, lastLogTerm=1,log.length=844
+2020/10/12 22:10:45 [3] converting to follower, currentTerm=2, lastLogTerm=1,log.length=3941
+2020/10/12 22:10:45 [1] converting to follower, currentTerm=2, lastLogTerm=1,log.length=3941
+2020/10/12 22:10:45 [1] converting to follower, currentTerm=2, lastLogTerm=1,log.length=3941
+2020/10/12 22:10:45 [0] obtain vote from 4.
+2020/10/12 22:10:45 [0] obtain vote from 3.
+2020/10/12 22:10:45 [0] obtain vote from 1.
+2020/10/12 22:10:45 [0] converting to leader, currentTerm=2, lastLogTerm=1,log.length=3941
+[4] lastIncludedIndex:3908，log.length:3909, commitIndex:3908
+[2] lastIncludedIndex:3908，log.length:3909, commitIndex:3908
+2020/10/12 22:10:45 get wrong value, key 2, wanted:
+x 2 0 yx 2 1 yx 2 2 yx 2 3 yx 2 4 yx 2 5 yx 2 6 yx 2 7 yx 2 8 yx 2 9 yx 2 10 yx 2 11 yx 2 12 yx 2 13 yx 2 14 yx 2 15 yx 2 16 yx 2 17 yx 2 18 yx 2 19 yx 2 20 yx 2 21 yx 2 22 yx 2 23 yx 2 24 yx 2 25 yx 2 26 yx 2 27 yx 2 28 yx 2 29 yx 2 30 yx 2 31 yx 2 32 yx 2 33 yx 2 34 yx 2 35 yx 2 36 yx 2 37 yx 2 38 yx 2 39 yx 2 40 yx 2 41 yx 2 42 yx 2 43 yx 2 44 yx 2 45 yx 2 46 yx 2 47 yx 2 48 yx 2 49 yx 2 50 yx 2 51 yx 2 52 yx 2 53 yx 2 54 yx 2 55 yx 2 56 yx 2 57 yx 2 58 yx 2 59 yx 2 60 yx 2 61 yx 2 62 yx 2 63 yx 2 64 yx 2 65 yx 2 66 yx 2 67 yx 2 68 yx 2 69 yx 2 70 yx 2 71 yx 2 72 yx 2 73 yx 2 74 yx 2 75 yx 2 76 yx 2 77 yx 2 78 yx 2 79 yx 2 80 yx 2 81 yx 2 82 yx 2 83 yx 2 84 yx 2 85 yx 2 86 yx 2 87 yx 2 88 yx 2 89 yx 2 90 yx 2 91 yx 2 92 yx 2 93 yx 2 94 yx 2 95 yx 2 96 yx 2 97 yx 2 98 yx 2 99 yx 2 100 yx 2 101 yx 2 102 yx 2 103 yx 2 104 yx 2 105 yx 2 106 yx 2 107 yx 2 108 yx 2 109 yx 2 110 yx 2 111 yx 2 112 yx 2 113 yx 2 114 yx 2 115 yx 2 116 yx 2 117 yx 2 118 yx 2 119 yx 2 120 yx 2 121 yx 2 122 yx 2 123 yx 2 124 yx 2 125 yx 2 126 yx 2 127 yx 2 128 yx 2 129 yx 2 130 yx 2 131 yx 2 132 yx 2 133 yx 2 134 yx 2 135 yx 2 136 yx 2 137 yx 2 138 yx 2 139 yx 2 140 yx 2 141 yx 2 142 yx 2 143 yx 2 144 yx 2 145 yx 2 146 yx 2 147 yx 2 148 yx 2 149 yx 2 150 yx 2 151 yx 2 152 yx 2 153 yx 2 154 yx 2 155 yx 2 156 yx 2 157 yx 2 158 yx 2 159 yx 2 160 yx 2 161 yx 2 162 yx 2 163 yx 2 164 yx 2 165 yx 2 166 yx 2 167 yx 2 168 yx 2 169 yx 2 170 yx 2 171 yx 2 172 yx 2 173 yx 2 174 yx 2 175 yx 2 176 yx 2 177 yx 2 178 yx 2 179 yx 2 180 yx 2 181 yx 2 182 yx 2 183 yx 2 184 yx 2 185 yx 2 186 yx 2 187 yx 2 188 yx 2 189 yx 2 190 yx 2 191 yx 2 192 yx 2 193 yx 2 194 yx 2 195 yx 2 196 yx 2 197 yx 2 198 yx 2 199 yx 2 200 yx 2 201 yx 2 202 yx 2 203 yx 2 204 yx 2 205 yx 2 206 yx 2 207 yx 2 208 yx 2 209 yx 2 210 yx 2 211 yx 2 212 yx 2 213 yx 2 214 yx 2 215 yx 2 216 yx 2 217 yx 2 218 yx 2 219 yx 2 220 yx 2 221 yx 2 222 yx 2 223 yx 2 224 yx 2 225 yx 2 226 yx 2 227 yx 2 228 yx 2 229 yx 2 230 yx 2 231 yx 2 232 yx 2 233 yx 2 234 yx 2 235 yx 2 236 yx 2 237 yx 2 238 yx 2 239 yx 2 240 yx 2 241 yx 2 242 yx 2 243 yx 2 244 yx 2 245 yx 2 246 yx 2 247 yx 2 248 yx 2 249 yx 2 250 yx 2 251 yx 2 252 yx 2 253 yx 2 254 yx 2 255 yx 2 256 yx 2 257 yx 2 258 yx 2 259 yx 2 260 yx 2 261 yx 2 262 yx 2 263 yx 2 264 yx 2 265 yx 2 266 yx 2 267 yx 2 268 yx 2 269 yx 2 270 yx 2 271 yx 2 272 yx 2 273 yx 2 274 yx 2 275 yx 2 276 yx 2 277 yx 2 278 yx 2 279 yx 2 280 yx 2 281 yx 2 282 yx 2 283 yx 2 284 yx 2 285 yx 2 286 yx 2 287 yx 2 288 yx 2 289 yx 2 290 yx 2 291 yx 2 292 yx 2 293 yx 2 294 yx 2 295 yx 2 296 yx 2 297 yx 2 298 yx 2 299 yx 2 300 yx 2 301 y
+, got
+
+exit status 1
+FAIL	_/C_/Users/hy/Desktop/自学课程/MIT6.824/LABS/mine/src/kvraft	16.678s

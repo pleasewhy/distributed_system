@@ -1,6 +1,9 @@
 package kvraft
 
-import "../labrpc"
+import (
+	"../labrpc"
+	"log"
+)
 import "testing"
 import "os"
 
@@ -12,7 +15,6 @@ import "encoding/base64"
 import "sync"
 import "runtime"
 import "../raft"
-import "fmt"
 import "time"
 import "sync/atomic"
 
@@ -57,7 +59,7 @@ type config struct {
 	// begin()/end() statistics
 	t0    time.Time // time at which test_test.go called cfg.begin()
 	rpcs0 int       // rpcTotal() at start of test
-	ops   int32     // number of clerk get/put/append method calls
+	ops   int32     // number of clerk contain/put/append method calls
 }
 
 func (cfg *config) checkTimeout() {
@@ -175,7 +177,7 @@ func (cfg *config) ConnectAll() {
 func (cfg *config) partition(p1 []int, p2 []int) {
 	cfg.mu.Lock()
 	defer cfg.mu.Unlock()
-	// log.Printf("partition servers into: %v %v\n", p1, p2)
+	log.Printf("partition servers into: %v %v\n", p1, p2)
 	for i := 0; i < len(p1); i++ {
 		cfg.disconnectUnlocked(p1[i], p2)
 		cfg.connectUnlocked(p1[i], p1)
@@ -193,7 +195,7 @@ func (cfg *config) makeClient(to []int) *Clerk {
 	cfg.mu.Lock()
 	defer cfg.mu.Unlock()
 
-	// a fresh set of ClientEnds.
+	// a fresh Set of ClientEnds.
 	ends := make([]*labrpc.ClientEnd, cfg.n)
 	endnames := make([]string, cfg.n)
 	for j := 0; j < cfg.n; j++ {
@@ -288,13 +290,13 @@ func (cfg *config) ShutdownServer(i int) {
 func (cfg *config) StartServer(i int) {
 	cfg.mu.Lock()
 
-	// a fresh set of outgoing ClientEnd names.
+	// a fresh Set of outgoing ClientEnd names.
 	cfg.endnames[i] = make([]string, cfg.n)
 	for j := 0; j < cfg.n; j++ {
 		cfg.endnames[i][j] = randstring(20)
 	}
 
-	// a fresh set of ClientEnds.
+	// a fresh Set of ClientEnds.
 	ends := make([]*labrpc.ClientEnd, cfg.n)
 	for j := 0; j < cfg.n; j++ {
 		ends[j] = cfg.net.MakeEnd(cfg.endnames[i][j])
@@ -361,7 +363,7 @@ var ncpu_once sync.Once
 func make_config(t *testing.T, n int, unreliable bool, maxraftstate int) *config {
 	ncpu_once.Do(func() {
 		if runtime.NumCPU() < 2 {
-			fmt.Printf("warning: only one CPU, which may conceal locking bugs\n")
+			log.Printf("warning: only one CPU, which may conceal locking bugs\n")
 		}
 		rand.Seed(makeSeed())
 	})
@@ -378,7 +380,7 @@ func make_config(t *testing.T, n int, unreliable bool, maxraftstate int) *config
 	cfg.maxraftstate = maxraftstate
 	cfg.start = time.Now()
 
-	// create a full set of KV servers.
+	// create a full Set of KV servers.
 	for i := 0; i < cfg.n; i++ {
 		cfg.StartServer(i)
 	}
@@ -398,7 +400,8 @@ func (cfg *config) rpcTotal() int {
 // print the Test message.
 // e.g. cfg.begin("Test (2B): RPC counts aren't too high")
 func (cfg *config) begin(description string) {
-	fmt.Printf("%s ...\n", description)
+	//fmt.Printf("%s ...\n", description)
+	log.Printf("%s ...\n", description)
 	cfg.t0 = time.Now()
 	cfg.rpcs0 = cfg.rpcTotal()
 	atomic.StoreInt32(&cfg.ops, 0)
@@ -418,9 +421,9 @@ func (cfg *config) end() {
 		t := time.Since(cfg.t0).Seconds()  // real time
 		npeers := cfg.n                    // number of Raft peers
 		nrpc := cfg.rpcTotal() - cfg.rpcs0 // number of RPC sends
-		ops := atomic.LoadInt32(&cfg.ops)  //  number of clerk get/put/append calls
+		ops := atomic.LoadInt32(&cfg.ops)  //  number of clerk contain/put/append calls
 
-		fmt.Printf("  ... Passed --")
-		fmt.Printf("  %4.1f  %d %5d %4d\n", t, npeers, nrpc, ops)
+		log.Printf("  ... Passed --")
+		log.Printf("  %4.1f  %d %5d %4d\n", t, npeers, nrpc, ops)
 	}
 }

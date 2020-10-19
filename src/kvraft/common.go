@@ -8,7 +8,7 @@ const (
 	ErrWrongLeader = "ErrWrongLeader"
 	ErrInternal    = "InternalError"
 	ErrHandling    = "Handling"
-	CommitTimeout  = time.Second * 2
+	CommitTimeout  = time.Millisecond*500
 )
 
 type Err string

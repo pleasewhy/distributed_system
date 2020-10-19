@@ -43,7 +43,7 @@ func MakeClerk(servers []*labrpc.ClientEnd) *Clerk {
 // arguments. and reply must be passed as a pointer.
 //
 func (ck *Clerk) Get(key string) string {
-	DPrintf("send get request key = %s.", key)
+	DPrintf("send contain request key = %s.", key)
 	args := &GetArgs{Key: key}
 	reply := &GetReply{}
 	ok := ck.callGetRpc(ck.currentLeader, time.Millisecond*200, args, reply)
@@ -56,17 +56,17 @@ func (ck *Clerk) Get(key string) string {
 			reply := &GetReply{}
 			ok := ck.callGetRpc(i, time.Millisecond*200, args, reply)
 			if !ok {
-				//fmt.Printf("call %d get failed\n", i)
+				//fmt.Printf("call %d contain failed\n", i)
 				continue
 			}
 
 			if reply.Err == OK {
 				ck.currentLeader = i
-				//fmt.Printf("get finish {key:%v, value:%v}\n", args.Key, reply.Value)
+				//fmt.Printf("contain finish {key:%v, value:%v}\n", args.Key, reply.Value)
 				return reply.Value
 			}
 		}
-		time.Sleep(time.Millisecond * 50)
+		time.Sleep(time.Millisecond * 100)
 	}
 
 	// You will have to modify this function.
@@ -98,6 +98,7 @@ func (ck *Clerk) PutAppend(key string, value string, op int) {
 	reply := &PutAppendReply{}
 	ok := ck.callAppendPutRpc(ck.currentLeader, time.Millisecond*200, args, reply)
 	if ok && reply.Err == OK {
+		DPrintf("{key:%v, value:%v} finish.\n", key, value)
 		return
 	}
 	//

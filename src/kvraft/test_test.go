@@ -19,7 +19,7 @@ const electionTimeout = 1 * time.Second
 
 const linearizabilityCheckTimeout = 1 * time.Second
 
-// get/put/putappend that keep counts
+// contain/put/putappend that keep counts
 func Get(cfg *config, ck *Clerk, key string) string {
 	v := ck.Get(key)
 	cfg.op()
@@ -138,15 +138,16 @@ func partitioner(t *testing.T, cfg *config, ch chan bool, done *int32) {
 			}
 		}
 		cfg.partition(pa[0], pa[1])
+		fmt.Printf("\n\n\np1:%v,p2:%v\n\n\n\n", pa[0], pa[1])
 		time.Sleep(electionTimeout + time.Duration(rand.Int63()%200)*time.Millisecond)
 	}
 }
 
 // Basic test is as follows: one or more clients submitting Append/Get
-// operations to set of servers for some period of time.  After the period is
+// operations to Set of servers for some period of time.  After the period is
 // over, test checks that all appended values are present and in order for a
-// particular key.  If unreliable is set, RPCs may fail.  If crash is set, the
-// servers crash after the period is over and restart.  If partitions is set,
+// particular key.  If unreliable is Set, RPCs may fail.  If crash is Set, the
+// servers crash after the period is over and restart.  If partitions is Set,
 // the test repartitions the network concurrently with the clients and servers. If
 // maxraftstate is a positive number, the size of the state for Raft (i.e., log
 // size) shouldn't exceed 8*maxraftstate. If maxraftstate is negative,
@@ -211,10 +212,10 @@ func GenericTest(t *testing.T, part string, nclients int, unreliable bool, crash
 					last = NextValue(last, nv)
 					j++
 				} else {
-					// log.Printf("%d: client new get %v\n", cli, key)
+					// log.Printf("%d: client new contain %v\n", cli, key)
 					v := Get(cfg, myck, key)
 					if v != last {
-						log.Fatalf("get wrong value, key %v, wanted:\n%v\n, got\n%v\n", key, last, v)
+						log.Fatalf("contain wrong value, key %v, wanted:\n%v\n, got\n%v\n", key, last, v)
 					}
 				}
 			}
@@ -243,14 +244,14 @@ func GenericTest(t *testing.T, part string, nclients int, unreliable bool, crash
 		}
 
 		if crash {
-			// log.Printf("shutdown servers\n")
+			log.Printf("shutdown servers\n")
 			for i := 0; i < nservers; i++ {
 				cfg.ShutdownServer(i)
 			}
 			// Wait for a while for servers to shutdown, since
 			// shutdown isn't a real crash and isn't instantaneous
 			time.Sleep(electionTimeout)
-			// log.Printf("restart servers\n")
+			fmt.Printf("\n\n\nrestart servers\n\n\n")
 			// crash and re-start all
 			for i := 0; i < nservers; i++ {
 				cfg.StartServer(i)
@@ -389,6 +390,7 @@ func GenericTestLinearizability(t *testing.T, part string, nclients int, nserver
 			// won't return until that server discovers a new term
 			// has started.
 			cfg.ConnectAll()
+			fmt.Printf("\n\nreconnect all\n\n")
 			// wait for a while so that we have a new term
 			time.Sleep(electionTimeout)
 		}
@@ -430,13 +432,13 @@ func GenericTestLinearizability(t *testing.T, part string, nclients int, nserver
 	if res == porcupine.Illegal {
 		file, err := ioutil.TempFile("", "*.html")
 		if err != nil {
-			fmt.Printf("info: failed to create temp file for visualization")
+			log.Printf("info: failed to create temp file for visualization")
 		} else {
 			err = porcupine.Visualize(models.KvModel, info, file)
 			if err != nil {
-				fmt.Printf("info: failed to write history visualization to %s\n", file.Name())
+				log.Printf("info: failed to write history visualization to %s\n", file.Name())
 			} else {
-				fmt.Printf("info: wrote history visualization to %s\n", file.Name())
+				log.Printf("info: wrote history visualization to %s\n", file.Name())
 			}
 		}
 		t.Fatal("history is not linearizable")

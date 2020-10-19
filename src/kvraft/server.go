@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-const Debug = 1
+const Debug = 0
 
 const (
 	APPEND = iota
@@ -36,28 +36,29 @@ type Op struct {
 }
 
 type KVServer struct {
-	mu       sync.Mutex
-	mapMu    sync.Mutex
-	me       int
-	rf       *raft.Raft
-	applyCh  chan raft.ApplyMsg
-	noticeCh chan bool
-	dead     int32 // set by Kill()
-	kvMap    map[string]string
-
-	maxraftstate   int // snapshot if log grows this big
-	successOpMap   sync.Map
-	isHandling     bool
-	handlingReqMap sync.Map // save the Op being 	handled
+	mu           sync.Mutex
+	mapMu        sync.Mutex
+	me           int
+	rf           *raft.Raft
+	applyCh      chan raft.ApplyMsg
+	noticeCh     chan bool
+	dead         int32 // Set by Kill()
+	kvMap        map[string]string
+	persister    *raft.Persister
+	maxraftstate int // snapshot if log grows this big
+	successSet   *Set
+	handlingSet  *Set // save the Op being handled
 }
 
 // create a snapshot of the kvMap and returns the encoded byte array.
 func (kv *KVServer) createSnapshot() ([]byte, error) {
 	bf := new(bytes.Buffer)
 	e := labgob.NewEncoder(bf)
-	err := e.Encode(kv.kvMap)
-	if err != nil {
-		return nil, err
+	lastIncludedIndex, lastIncludedTerm := kv.rf.GetIndexAndTerm()
+	if e.Encode(kv.kvMap) != nil ||
+		e.Encode(lastIncludedIndex) != nil ||
+		e.Encode(lastIncludedTerm) != nil {
+		panic("encode error: create snapshot failed")
 	}
 	return bf.Bytes(), nil
 }
@@ -78,7 +79,6 @@ func (kv *KVServer) Get(args *GetArgs, reply *GetReply) {
 		reply.Err = ErrWrongLeader
 		return
 	}
-	DPrintf("[%d] ", kv.me)
 	//DPrintf("[%d] received Get Rpc request {%v}", kv.me, args.Key)
 	if !kv.rf.IsConnectMajority() {
 		reply.Err = ErrWrongLeader
@@ -89,6 +89,7 @@ func (kv *KVServer) Get(args *GetArgs, reply *GetReply) {
 		reply.Err = ErrInternal
 		return
 	}
+	DPrintf("[%d] contain key=%s", kv.me, args.Key)
 	reply.Value = kv.get0(args.Key)
 	reply.Err = OK
 }
@@ -104,14 +105,13 @@ func (kv *KVServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
 	}
 	DPrintf("[%d] received PutAppend Rpc request {key:%v, value:%v}", kv.me, args.Key, args.Value)
 
-	_, ok1 := kv.successOpMap.Load(args.Id)
+	ok1 := kv.successSet.contain(args.Id)
 	if ok1 {
 		DPrintf("{key:%v, value:%v} already successful", args.Key, args.Value)
 		reply.Err = OK
 		return
 	}
-	kv.isHandling = true
-	kv.handlingReqMap.Store(args.Id, true)
+	kv.handlingSet.put(args.Id)
 	op := Op{
 		Operation: args.Op,
 		Key:       args.Key,
@@ -130,20 +130,19 @@ func (kv *KVServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
 	case <-t:
 		ok = false
 	}
-	kv.isHandling = false
-	kv.handlingReqMap.Delete(args.Id)
+	kv.handlingSet.delete(args.Id)
 	if _, isLeader := kv.rf.GetState(); !isLeader || !ok {
 		DPrintf("{key:%v, value:%v} internal error", args.Key, args.Value)
 		reply.Err = ErrInternal
 	} else {
-		kv.successOpMap.Delete(args.LastOpId)
+		kv.successSet.delete(args.LastOpId)
 	}
 }
 
 //
 // the tester calls Kill() when a KVServer instance won't
 // be needed again. for your convenience, we supply
-// code to set rf.dead (without needing a lock),
+// code to Set rf.dead (without needing a lock),
 // and a killed() method to test rf.dead in
 // long-running loops. you can also add your own
 // code to Kill(). you're not required to do anything
@@ -164,12 +163,18 @@ func (kv *KVServer) killed() bool {
 func (kv *KVServer) applyCommitLogOfInRealTime() {
 	for !kv.killed() {
 		msg := <-kv.applyCh
+
+		if msg.ApplySnapshot {
+			kv.kvMap = msg.Kvmap
+			continue
+		}
+
 		if !msg.CommandValid {
 			continue
 		}
 		command := msg.Command
 		op := command.(Op)
-		if _, ok := kv.successOpMap.Load(op.Id); ok {
+		if ok := kv.successSet.contain(op.Id); ok {
 			continue
 		}
 		_, isLeader := kv.rf.GetState()
@@ -186,8 +191,28 @@ func (kv *KVServer) applyCommitLogOfInRealTime() {
 			kv.kvMap[op.Key] = op.Value
 		}
 		kv.mapMu.Unlock()
-		kv.successOpMap.Store(op.Id, true)
-		_, ok := kv.handlingReqMap.Load(op.Id)
+
+		if kv.maxraftstate > 0 &&
+			kv.persister.RaftStateSize() > (int)(float32(kv.maxraftstate)*7.2) {
+			if msg.NeedLock {
+				kv.rf.Lock()
+			}
+
+			//commitIndex, _ := kv.rf.GetIndexAndTerm()
+
+			kv.rf.DiscardLogWithLock(msg.CommandIndex)
+			snapshot, _ := kv.createSnapshot()
+			state, _ := kv.rf.GetStateData()
+
+			kv.persister.SaveStateAndSnapshot(state, snapshot)
+			if msg.NeedLock {
+				kv.rf.Unlock()
+			}
+
+		}
+
+		kv.successSet.put(op.Id)
+		ok := kv.handlingSet.contain(op.Id)
 		if ok {
 			kv.noticeCh <- true
 		}
@@ -195,7 +220,7 @@ func (kv *KVServer) applyCommitLogOfInRealTime() {
 }
 
 //
-// servers[] contains the ports of the set of
+// servers[] contains the ports of the Set of
 // servers that will cooperate via Raft to
 // form the fault-tolerant key/value service.
 // me is the index of the current server in servers[].
@@ -212,19 +237,23 @@ func StartKVServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persiste
 	// call labgob.Register on structures you want
 	// Go's RPC library to marshall/unmarshall.
 	labgob.Register(Op{})
+	labgob.Register(map[string]string{})
+	//labgob.Register()
 	_, _ = DPrintf("start kv server")
 	kv := new(KVServer)
 	kv.me = me
 	kv.maxraftstate = maxraftstate
+	kv.persister = persister
 	kv.kvMap = map[string]string{}
 	kv.applyCh = make(chan raft.ApplyMsg)
 
 	kv.noticeCh = make(chan bool)
-	kv.successOpMap = sync.Map{}
-	kv.handlingReqMap = sync.Map{}
+	kv.successSet = &Set{keys: []int64{}}
+	kv.handlingSet = &Set{keys: []int64{}}
+	go kv.applyCommitLogOfInRealTime()
+
 	kv.rf = raft.Make(servers, me, persister, kv.applyCh)
 
 	// You may need initialization code here.
-	go kv.applyCommitLogOfInRealTime()
 	return kv
 }
